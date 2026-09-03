@@ -4,7 +4,7 @@ import {
   SubjectAttendanceMetrics,
 } from '../../types/attendance';
 
-const EPSILON = 1e-10;
+export const EPSILON = 1e-10;
 
 /**
  * Validates that classes held and attended are non-negative integers
@@ -35,6 +35,50 @@ export function validateTarget(targetPercentage: number): void {
 }
 
 /**
+ * Parses and validates an integer count from user form input string.
+ * Returns either a valid integer or an error message.
+ */
+export function parseCountInput(
+  value: string,
+  fieldName: string = 'Count'
+): { value: number | null; error?: string } {
+  const trimmed = value.trim();
+  if (trimmed === '') {
+    return { value: null, error: `${fieldName} is required.` };
+  }
+  const num = Number(trimmed);
+  if (!Number.isFinite(num) || !Number.isInteger(num)) {
+    return { value: null, error: `${fieldName} must be a whole number.` };
+  }
+  if (num < 0) {
+    return { value: null, error: `${fieldName} cannot be negative.` };
+  }
+  return { value: num };
+}
+
+/**
+ * Parses and validates a target percentage from user form input string.
+ * Returns either a valid percentage number in [0, 100] or an error message.
+ */
+export function parseTargetInput(
+  value: string,
+  fieldName: string = 'Target'
+): { value: number | null; error?: string } {
+  const trimmed = value.trim();
+  if (trimmed === '') {
+    return { value: null, error: `${fieldName} is required.` };
+  }
+  const num = Number(trimmed);
+  if (!Number.isFinite(num)) {
+    return { value: null, error: `${fieldName} must be a valid number.` };
+  }
+  if (num < 0 || num > 100) {
+    return { value: null, error: `${fieldName} must be between 0% and 100%.` };
+  }
+  return { value: num };
+}
+
+/**
  * Calculates current attendance percentage.
  * Returns null if no classes have been held yet (classesHeld === 0)
  * to avoid falsely showing 0% when a course has not started.
@@ -48,6 +92,55 @@ export function calculateCurrentPercentage(
     return null;
   }
   return (classesAttended / classesHeld) * 100;
+}
+
+/**
+ * Formats attendance percentage to avoid misleading rounding.
+ * If attendance is strictly below target, it will never round up to display
+ * the target percentage or higher.
+ */
+export function formatAttendancePercentage(
+  percentage: number | null,
+  options: { precision?: number; target?: number } = {}
+): string {
+  if (percentage === null) {
+    return '—';
+  }
+  const precision = options.precision ?? 1;
+  const formatted = percentage.toFixed(precision);
+
+  // Guard against misleading rounding across the target threshold
+  if (options.target !== undefined && percentage < options.target - EPSILON) {
+    const roundedValue = parseFloat(formatted);
+    if (roundedValue >= options.target) {
+      // Truncate to prevent false eligibility display
+      const factor = Math.pow(10, precision);
+      const floored = (Math.floor(percentage * factor) / factor).toFixed(precision);
+      return `${floored}%`;
+    }
+  }
+
+  return `${formatted}%`;
+}
+
+/**
+ * Projects the impact of attending vs missing the next class.
+ */
+export function calculateNextClassImpact(
+  classesHeld: number,
+  classesAttended: number
+): {
+  ifAttendedPercentage: number;
+  ifMissedPercentage: number;
+} {
+  validateCounts(classesHeld, classesAttended);
+  const nextHeld = classesHeld + 1;
+  const ifAttendedPercentage = ((classesAttended + 1) / nextHeld) * 100;
+  const ifMissedPercentage = (classesAttended / nextHeld) * 100;
+  return {
+    ifAttendedPercentage,
+    ifMissedPercentage,
+  };
 }
 
 /**
