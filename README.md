@@ -2,10 +2,25 @@
 
 A clean, practical attendance tracking web app designed for university students. The application runs entirely client-side with persistent local storage in IndexedDB, requiring no accounts, cloud databases, or external services.
 
-## Current Status (Stage 2 — Attendance Engine)
+## Current Status (Stage 3 — Subject and Semester Management)
 
-This repository contains the foundation architecture and verified attendance calculation engine:
+This repository contains the foundation architecture, verified calculation engine, and full semester and subject management:
 
+- **Semester Management**:
+  - Full semester CRUD: creation with name, optional academic year, and date ranges (with date range ordering validation).
+  - Explicit active semester selection with automatic detection and seamless switching.
+  - Archiving completed semesters to preserve historical records without affecting the active semester's totals.
+  - Isolated scoping: switching active semesters never cross-contaminates subjects or attendance records.
+- **Subject Management**:
+  - Dynamic subject CRUD: add subjects to the selected semester, edit name, course code, and target percentage (0% to 100%).
+  - Configurable tracking mode: choose between daily attendance tracking and manual class totals.
+  - Per-semester unique name and code validation: prevents duplicates within the same term while allowing course names to recur across different semesters.
+  - Real-time subject cards displaying attendance progress, eligibility status, safe bunks available, or recovery classes needed.
+  - Accessible deletion confirmation with modal dialogs explaining record removal consequences.
+- **Dashboard Overview**:
+  - Weighted overall attendance calculation across all subjects in the active semester.
+  - Subject status overview (number of subjects meeting targets vs needing attention).
+  - Integrated attendance recovery and safe-bunk analysis tools.
 - **Core Calculation Engine**:
   - Current attendance percentage calculation (distinguishes unstarted courses from 0% attendance).
   - Target recovery calculation: determines the minimum consecutive classes a student must attend to reach or exceed their attendance target ($x = \lceil (pH - A)/(1 - p) \rceil$) with numerical precision verification.
@@ -14,11 +29,6 @@ This repository contains the foundation architecture and verified attendance cal
   - Anti-misleading rounding guard: prevents rounding up to target when a student is strictly below target.
   - Weighted semester overall: sums total classes held and attended across subjects rather than unweighted percentage averaging.
   - Handled edge cases: 0 classes held, exact targets, 0% target, 100% target with absences, and boundary floating-point values.
-- **Attendance UI Components**:
-  - `AttendanceProgress`: Accessible progress bar with target threshold marker and status-aware color coding.
-  - `AttendanceStatus`: Restrained badges and callouts for `eligible`, `at_risk`, `ineligible`, and `not_started`.
-  - `AttendanceCalculator`: Interactive recovery modeling with quick presets (65%, 75%, 80%, 85%), remaining-classes feasibility, and next-class impact.
-  - `SafeBunkCalculator`: Safe-bunk tool with step-by-step miss impact projection table and assumption clarifications.
 - **Local Persistence Layer**:
   - IndexedDB database schema (`personal-attendance-tracker`, version 1) built on `idb`.
   - Object stores for `semesters`, `subjects`, `attendance_records`, and `settings` with compound indexes and cascade integrity.
