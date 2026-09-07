@@ -2,10 +2,18 @@
 
 A clean, practical attendance tracking web app designed for university students. The application runs entirely client-side with persistent local storage in IndexedDB, requiring no accounts, cloud databases, or external services.
 
-## Current Status (Stage 3 — Subject and Semester Management)
+## Current Status (Stage 4 — Daily Attendance Tracking)
 
-This repository contains the foundation architecture, verified calculation engine, and full semester and subject management:
+This repository contains the foundation architecture, verified calculation engine, semester/subject management, and rapid daily attendance tracking:
 
+- **Daily Attendance Tracking**:
+  - Fast multi-subject logging session defaulting to the local device calendar date (`YYYY-MM-DD`), preventing UTC day-shift bugs.
+  - 1-click "Present" (1/1) and "Absent" (0/1) buttons per subject, with multiple-classes stepper support (e.g. double periods, labs) and "No Class" handling.
+  - Live projected attendance percentage and count changes before saving.
+  - Past date selection and historical correction without duplicate records or double-counting.
+  - Future date guard policy: future date navigation is permitted for calendar viewing, but logging is safely locked.
+  - Strict tracking mode separation: Daily Attendance subjects derive totals dynamically and transactionally, while Manual Totals subjects are isolated to prevent double-counting.
+  - Single atomic IndexedDB transaction (`saveAttendanceBatch`) synchronizing daily records and subject aggregate totals.
 - **Semester Management**:
   - Full semester CRUD: creation with name, optional academic year, and date ranges (with date range ordering validation).
   - Explicit active semester selection with automatic detection and seamless switching.
@@ -19,6 +27,7 @@ This repository contains the foundation architecture, verified calculation engin
   - Accessible deletion confirmation with modal dialogs explaining record removal consequences.
 - **Dashboard Overview**:
   - Weighted overall attendance calculation across all subjects in the active semester.
+  - Quick "Log Attendance" action navigating straight to today's entry form.
   - Subject status overview (number of subjects meeting targets vs needing attention).
   - Integrated attendance recovery and safe-bunk analysis tools.
 - **Core Calculation Engine**:
@@ -31,7 +40,7 @@ This repository contains the foundation architecture, verified calculation engin
   - Handled edge cases: 0 classes held, exact targets, 0% target, 100% target with absences, and boundary floating-point values.
 - **Local Persistence Layer**:
   - IndexedDB database schema (`personal-attendance-tracker`, version 1) built on `idb`.
-  - Object stores for `semesters`, `subjects`, `attendance_records`, and `settings` with compound indexes and cascade integrity.
+  - Object stores for `semesters`, `subjects`, `attendance_records`, and `settings` with compound indexes (`by-subject-date`) and cascade integrity.
   - Storage abstraction (`IStorage`) and export/import backup schema definition.
 - **Application Shell & Navigation**:
   - Responsive horizontal top navigation with accessible landmarks, keyboard skip link, active page indicators, and mobile drawer.

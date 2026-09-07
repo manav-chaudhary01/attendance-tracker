@@ -34,8 +34,16 @@ export interface IStorage {
   // Attendance record operations
   getAttendanceRecords(subjectId?: string): Promise<DailyAttendanceRecord[]>;
   getAttendanceRecordsByDate(date: string): Promise<DailyAttendanceRecord[]>;
+  getAttendanceRecordBySubjectAndDate(subjectId: string, date: string): Promise<DailyAttendanceRecord | undefined>;
   saveAttendanceRecord(record: DailyAttendanceRecord): Promise<void>;
   deleteAttendanceRecord(id: string): Promise<void>;
+
+  // Batch atomic updates
+  saveAttendanceBatch(
+    recordsToSave: DailyAttendanceRecord[],
+    recordIdsToDelete: string[],
+    updatedSubjects: Subject[]
+  ): Promise<void>;
 
   // Settings
   getSettings(): Promise<AppSettings>;

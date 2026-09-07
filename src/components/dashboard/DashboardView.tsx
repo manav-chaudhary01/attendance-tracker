@@ -65,8 +65,15 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </span>
               <button
                 type="button"
-                onClick={() => onNavigate('subjects')}
+                onClick={() => onNavigate('history')}
                 className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-accent text-white rounded hover:bg-accent-hover transition-colors shadow-sm"
+              >
+                <span>Log Attendance</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => onNavigate('subjects')}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-background border border-border text-charcoal rounded hover:bg-background-subtle transition-colors"
               >
                 <Plus className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>Add Subject</span>

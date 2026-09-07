@@ -9,6 +9,8 @@ export interface Subject {
   trackingMode: TrackingMode;
   totalClassesHeld: number;
   totalClassesAttended: number;
+  initialClassesHeld?: number;
+  initialClassesAttended?: number;
   createdAt: string; // ISO 8601
   updatedAt: string; // ISO 8601
   archivedAt?: string; // ISO 8601
