@@ -2,10 +2,28 @@
 
 A clean, practical attendance tracking web app designed for university students. The application runs entirely client-side with persistent local storage in IndexedDB, requiring no accounts, cloud databases, or external services.
 
-## Current Status (Stage 4 — Daily Attendance Tracking)
+## Current Status (Stage 5 — History and Heatmap)
 
-This repository contains the foundation architecture, verified calculation engine, semester/subject management, and rapid daily attendance tracking:
+This repository contains the foundation architecture, verified calculation engine, semester/subject management, rapid daily attendance tracking, comprehensive attendance history log, and interactive yearly contribution heatmap:
 
+- **Yearly Attendance Heatmap**:
+  - Signature GitHub-contribution-style calendar grid tracking attendance consistency throughout the entire year (53 weeks × 7 days).
+  - Forest-green intensity palette with 4 proportional levels based on classes attended.
+  - Granular day status classification: full attendance (100%), partial attendance, zero attendance (alert-styled), explicit no-class records, unrecorded dates, and locked future dates.
+  - Zero-assumption policy: never infers that a class was held or missed merely because a date has no record.
+  - Accessible hover and focus tooltips displaying formatted date, classes attended/held, and attendance percentage.
+  - Day inspection modal (`DayDetailsModal`) presenting full subject breakdowns, counts, notes, and a 1-click shortcut to edit that day in the Daily Logger.
+  - Multi-dimensional filters: toggle between All Semesters, specific active or archived semesters, and individual subjects.
+  - Annual summary metrics: Total Classes Held, Total Attended, Missed, Annual Rate (%), Active Attendance Days, and Longest Attendance Streak.
+  - Full keyboard accessibility and `prefers-reduced-motion` compliance.
+- **Attendance History Log**:
+  - Filterable, searchable historical record ledger with multi-level filtering by semester, subject, and date range.
+  - Quick date presets: "All Time", "Last 7 Days", "Last 30 Days", "This Month".
+  - Keyword search matching subject name, course code, and session notes.
+  - Inline Quick Edit modal for rapid updates to classes held, attended, and notes.
+  - Delete record action with accessible `ConfirmDialog` explaining atomic recalculation.
+  - Single atomic IndexedDB batch updates (`saveAttendanceBatch`) ensuring that editing or deleting past records automatically recomputes subject attendance aggregates with zero drift.
+  - Unified view switching between "Daily Entry" form and "Attendance Log" ledger.
 - **Daily Attendance Tracking**:
   - Fast multi-subject logging session defaulting to the local device calendar date (`YYYY-MM-DD`), preventing UTC day-shift bugs.
   - 1-click "Present" (1/1) and "Absent" (0/1) buttons per subject, with multiple-classes stepper support (e.g. double periods, labs) and "No Class" handling.

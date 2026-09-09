@@ -60,6 +60,10 @@ export class MockStorage implements IStorage {
     this.records = this.records.filter((r) => r.subjectId !== id);
   }
 
+  async getAttendanceRecord(id: string): Promise<DailyAttendanceRecord | undefined> {
+    return this.records.find((r) => r.id === id);
+  }
+
   async getAttendanceRecords(subjectId?: string): Promise<DailyAttendanceRecord[]> {
     if (subjectId) {
       return this.records.filter((r) => r.subjectId === subjectId);

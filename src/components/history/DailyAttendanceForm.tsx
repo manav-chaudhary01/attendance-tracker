@@ -14,6 +14,7 @@ import {
   getRelativeDateBadge,
   isFutureDate,
   isToday,
+  isValidDateString,
 } from '../../utils/dates';
 import {
   formatAttendancePercentage,
@@ -70,6 +71,13 @@ export const DailyAttendanceForm: React.FC<DailyAttendanceFormProps> = ({
   const dateInputId = useId();
   const isFuture = isFutureDate(selectedDate, today);
   const relativeBadge = getRelativeDateBadge(selectedDate, today);
+
+  // Synchronize when initialDate prop changes from external navigation
+  useEffect(() => {
+    if (initialDate && isValidDateString(initialDate)) {
+      setSelectedDate(initialDate);
+    }
+  }, [initialDate]);
 
   // Load existing records whenever selectedDate or semesterId changes
   useEffect(() => {

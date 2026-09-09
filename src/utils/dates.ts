@@ -111,3 +111,38 @@ export function getRelativeDateBadge(
   }
   return null;
 }
+
+/**
+ * Returns the day of the week for a YYYY-MM-DD date string (0 for Sunday, 1 for Monday, ..., 6 for Saturday).
+ */
+export function getDayOfWeek(dateStr: string): number {
+  const [yearStr, monthStr, dayStr] = dateStr.split('-');
+  const date = new Date(Number(yearStr), Number(monthStr) - 1, Number(dayStr));
+  return date.getDay();
+}
+
+/**
+ * Returns all calendar dates (YYYY-MM-DD) for a given year in chronological order.
+ * Accurately accounts for leap years (366 days) and standard years (365 days).
+ */
+export function getDaysInYear(year: number): string[] {
+  const days: string[] = [];
+  let currentDate = `${year}-01-01`;
+  const nextYearStart = `${year + 1}-01-01`;
+
+  while (currentDate < nextYearStart) {
+    days.push(currentDate);
+    currentDate = addDays(currentDate, 1);
+  }
+
+  return days;
+}
+
+/**
+ * Returns localized short month name (Jan, Feb, etc.) for a 0-indexed month (0-11).
+ */
+export function getMonthName(monthIndex: number, length: 'short' | 'long' = 'short'): string {
+  const date = new Date(2026, monthIndex, 15);
+  return date.toLocaleDateString(undefined, { month: length });
+}
+

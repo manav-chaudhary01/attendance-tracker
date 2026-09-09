@@ -7,6 +7,9 @@ import {
   addDays,
   formatDateForDisplay,
   getRelativeDateBadge,
+  getDayOfWeek,
+  getDaysInYear,
+  getMonthName,
 } from './dates';
 
 describe('Date Utilities', () => {
@@ -62,5 +65,34 @@ describe('Date Utilities', () => {
     expect(formatted).toContain('Oct');
     expect(formatted).toContain('24');
     expect(formatted).toContain('2026');
+  });
+
+  it('calculates day of week correctly (0 for Sunday, 6 for Saturday)', () => {
+    // 2026-10-24 is a Saturday (6)
+    expect(getDayOfWeek('2026-10-24')).toBe(6);
+    // 2026-10-25 is a Sunday (0)
+    expect(getDayOfWeek('2026-10-25')).toBe(0);
+    // 2026-10-26 is a Monday (1)
+    expect(getDayOfWeek('2026-10-26')).toBe(1);
+  });
+
+  it('generates all days of the year accounting for leap and normal years', () => {
+    const leapDays = getDaysInYear(2024);
+    expect(leapDays.length).toBe(366);
+    expect(leapDays[0]).toBe('2024-01-01');
+    expect(leapDays[leapDays.length - 1]).toBe('2024-12-31');
+    expect(leapDays).toContain('2024-02-29');
+
+    const normalDays = getDaysInYear(2026);
+    expect(normalDays.length).toBe(365);
+    expect(normalDays[0]).toBe('2026-01-01');
+    expect(normalDays[normalDays.length - 1]).toBe('2026-12-31');
+    expect(normalDays).not.toContain('2026-02-29');
+  });
+
+  it('provides localized short and long month names', () => {
+    expect(getMonthName(0)).toBe('Jan');
+    expect(getMonthName(9)).toBe('Oct');
+    expect(getMonthName(9, 'long')).toBe('October');
   });
 });

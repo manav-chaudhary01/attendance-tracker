@@ -32,6 +32,7 @@ export const App: React.FC = () => {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [allSubjects, setAllSubjects] = useState<Subject[]>([]);
   const [defaultTarget, setDefaultTarget] = useState<number>(75);
+  const [targetAttendanceDate, setTargetAttendanceDate] = useState<string | undefined>(undefined);
   const [isInitializing, setIsInitializing] = useState(true);
 
   // Load all app data from local IndexedDB
@@ -161,14 +162,27 @@ export const App: React.FC = () => {
         return (
           <HistoryView
             activeSemester={activeSemester}
+            semesters={semesters}
             subjects={subjects}
             storage={storage}
             onAttendanceSaved={refreshData}
             onNavigate={navigate}
+            initialDate={targetAttendanceDate}
           />
         );
       case 'heatmap':
-        return <HeatmapView />;
+        return (
+          <HeatmapView
+            semesters={semesters}
+            activeSemester={activeSemester}
+            subjects={allSubjects}
+            storage={storage}
+            onNavigateToDailyEntry={(date) => {
+              setTargetAttendanceDate(date);
+              navigate('history');
+            }}
+          />
+        );
       case 'semesters':
         return (
           <SemestersView

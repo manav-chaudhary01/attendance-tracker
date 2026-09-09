@@ -146,6 +146,11 @@ export class IndexedDBStorage implements IStorage {
     await tx.done;
   }
 
+  async getAttendanceRecord(id: string): Promise<DailyAttendanceRecord | undefined> {
+    const db = await getDb();
+    return db.get('attendance_records', id);
+  }
+
   async getAttendanceRecords(subjectId?: string): Promise<DailyAttendanceRecord[]> {
     const db = await getDb();
     if (subjectId) {
