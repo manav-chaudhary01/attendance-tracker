@@ -2,9 +2,28 @@
 
 A clean, practical attendance tracking web app designed for university students. The application runs entirely client-side with persistent local storage in IndexedDB, requiring no accounts, cloud databases, or external services.
 
-## Current Status (Stage 5 — History and Heatmap)
+## Current Status (Stage 6 — Dashboard, Product Polish, and Final Verification)
 
-This repository contains the foundation architecture, verified calculation engine, semester/subject management, rapid daily attendance tracking, comprehensive attendance history log, and interactive yearly contribution heatmap:
+This repository contains the complete, production-ready personal attendance tracker web app:
+
+- **Enhanced Student Dashboard**:
+  - Active semester banner with academic year, term dates, and direct "Log Today's Attendance" CTA shortcut.
+  - Mathematically sound weighted overall attendance percentage ($\frac{\sum A}{\sum H}$) across active semester subjects, avoiding unweighted averaging distortion.
+  - Three-tier actionable subject status categorization:
+    - **Below Target**: Highlights subjects in danger with current deficit, attendance counts, and exact consecutive classes needed to recover.
+    - **Borderline**: Identifies subjects within 5% of the target threshold with safe-bunk cushions.
+    - **Comfortably On Track**: Displays resilient subjects meeting or exceeding their target with calculated safe bunks.
+  - Recent attendance activity stream showing the latest 3–5 records with status badges (Full, Partial, Absent), class counts, and session notes.
+  - Embedded interactive Decision Tools: switchable Attendance Recovery Calculator and Safe Bunk Analyzer pre-populated with active semester metrics.
+  - Graceful empty states for newly initialized semesters or semesters without subjects.
+- **Backup & Recovery / Settings**:
+  - Client-side JSON backup export generating timestamped file downloads (`attendance-backup-YYYY-MM-DD.json`).
+  - Strict JSON schema v1 validation verifying payload structure, schema version, date order, and cross-entity referential integrity.
+  - Import preview modal displaying counts for semesters, subjects, and daily records before committing changes.
+  - Atomic IndexedDB restoration (`storage.importData`) ensuring consistent all-or-nothing rollback on failure.
+  - Safe database reset with modal confirmation dialog to reset local state.
+  - Configurable application preferences: default attendance target (0–100%) and heatmap week start day (Monday vs Sunday).
+- **Yearly Attendance Heatmap**:
 
 - **Yearly Attendance Heatmap**:
   - Signature GitHub-contribution-style calendar grid tracking attendance consistency throughout the entire year (53 weeks × 7 days).

@@ -144,6 +144,7 @@ export const App: React.FC = () => {
             onNavigate={navigate}
             activeSemester={activeSemester}
             subjects={subjects}
+            storage={storage}
           />
         );
       case 'subjects':
@@ -199,7 +200,7 @@ export const App: React.FC = () => {
           />
         );
       case 'settings':
-        return <SettingsView />;
+        return <SettingsView storage={storage} onDataChanged={refreshData} />;
     }
   };
 
