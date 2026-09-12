@@ -11,7 +11,6 @@ import { AttendanceCalculator } from '../attendance/AttendanceCalculator';
 import { SafeBunkCalculator } from '../attendance/SafeBunkCalculator';
 import { AttendanceProgress } from '../attendance/AttendanceProgress';
 import { AttendanceStatus } from '../attendance/AttendanceStatus';
-import { EmptyState } from '../common/EmptyState';
 import {
   calculateSemesterOverall,
   calculateSubjectMetrics,
@@ -146,20 +145,20 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       {/* Dashboard Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4 border-b border-border">
         <div>
-          <h1 className="text-xl font-semibold text-charcoal">Student Dashboard</h1>
+          <h1 className="text-xl font-semibold text-charcoal tracking-tight">Student Dashboard</h1>
           <p className="text-xs text-charcoal-muted mt-0.5">
             Real-time semester attendance metrics, target eligibility, and safe bunks.
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2.5">
           {activeSemester ? (
             <>
               {/* Primary Action: Log Today's Attendance */}
               <button
                 type="button"
                 onClick={() => onNavigate('history')}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium bg-forest text-white rounded hover:bg-forest/90 focus-visible:ring-2 focus-visible:ring-forest outline-none shadow-2xs transition-colors"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium bg-accent text-white rounded-md hover:bg-accent-hover focus-visible:ring-2 focus-visible:ring-accent outline-none shadow-2xs transition-all duration-200 tactile-button"
               >
                 <Calendar className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>Log Today&apos;s Attendance</span>
@@ -168,7 +167,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <button
                 type="button"
                 onClick={() => onNavigate('subjects')}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-background border border-border text-charcoal rounded hover:bg-background-subtle focus-visible:ring-2 focus-visible:ring-forest outline-none transition-colors"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium bg-background border border-border text-charcoal rounded-md hover:bg-background-subtle focus-visible:ring-2 focus-visible:ring-accent outline-none transition-all duration-200 tactile-button"
               >
                 <Plus className="w-3.5 h-3.5 text-stone-500" aria-hidden="true" />
                 <span>Add Subject</span>
@@ -178,7 +177,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <button
               type="button"
               onClick={() => onNavigate('semesters')}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium bg-forest text-white rounded hover:bg-forest/90 focus-visible:ring-2 focus-visible:ring-forest outline-none shadow-2xs transition-colors"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium bg-accent text-white rounded-md hover:bg-accent-hover focus-visible:ring-2 focus-visible:ring-accent outline-none shadow-2xs transition-all duration-200 tactile-button"
             >
               <Layers className="w-3.5 h-3.5" />
               <span>Select Active Semester</span>
@@ -189,57 +188,131 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
       {/* When no semester is active */}
       {!activeSemester ? (
-        <EmptyState
-          title="No Active Semester Selected"
-          description="Create or select an active academic semester to begin tracking attendance, calculating eligibility, and projecting safe bunks."
-          action={{
-            label: 'Configure Semesters',
-            onClick: () => onNavigate('semesters'),
-          }}
-        />
+        <div className="space-y-6">
+          <div className="tactile-card p-6 sm:p-8 max-w-2xl mx-auto text-center space-y-4">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-accent-light text-accent shadow-2xs">
+              <Layers className="w-6 h-6" aria-hidden="true" />
+            </div>
+            <div>
+              <h2 className="text-base font-semibold text-charcoal">No Active Semester Selected</h2>
+              <p className="text-xs text-charcoal-muted max-w-md mx-auto mt-1 leading-relaxed">
+                Create or select an active academic semester to begin tracking attendance, calculating eligibility, and projecting safe bunks.
+              </p>
+            </div>
+
+            {/* Quick 3-step feature roadmap preview */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-3 pb-2 text-left">
+              <div className="p-3 rounded-md bg-background-subtle border border-border space-y-1">
+                <span className="text-[10px] font-mono font-semibold text-accent uppercase tracking-wider">Step 1</span>
+                <div className="text-xs font-semibold text-charcoal">Create Semester</div>
+                <p className="text-[11px] text-charcoal-muted leading-snug">Set up your academic term with optional dates.</p>
+              </div>
+              <div className="p-3 rounded-md bg-background-subtle border border-border space-y-1">
+                <span className="text-[10px] font-mono font-semibold text-accent uppercase tracking-wider">Step 2</span>
+                <div className="text-xs font-semibold text-charcoal">Add Subjects</div>
+                <p className="text-[11px] text-charcoal-muted leading-snug">Configure course codes, daily mode, and targets.</p>
+              </div>
+              <div className="p-3 rounded-md bg-background-subtle border border-border space-y-1">
+                <span className="text-[10px] font-mono font-semibold text-accent uppercase tracking-wider">Step 3</span>
+                <div className="text-xs font-semibold text-charcoal">Track &amp; Analyze</div>
+                <p className="text-[11px] text-charcoal-muted leading-snug">Log daily classes, calculate safe bunks, and view streaks.</p>
+              </div>
+            </div>
+
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => onNavigate('semesters')}
+                className="px-4 py-2 text-xs font-medium bg-accent text-white rounded-md hover:bg-accent-hover transition-all duration-200 tactile-button shadow-2xs inline-flex items-center gap-1.5"
+              >
+                <span>Configure Semesters</span>
+                <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+        </div>
       ) : subjects.length === 0 ? (
         /* When semester has no subjects */
-        <EmptyState
-          icon={BookOpen}
-          title={`No subjects added to "${activeSemester.name}"`}
-          description="Add your course subjects to start logging class sessions and calculating recovery requirements."
-          action={{
-            label: 'Add First Subject',
-            onClick: () => onNavigate('subjects'),
-          }}
-          secondaryAction={{
-            label: 'Switch Semester',
-            onClick: () => onNavigate('semesters'),
-          }}
-        />
+        <div className="space-y-6">
+          <div className="tactile-card p-6 sm:p-8 max-w-2xl mx-auto text-center space-y-4">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-accent-light text-accent shadow-2xs">
+              <BookOpen className="w-6 h-6" aria-hidden="true" />
+            </div>
+            <div>
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-accent-light text-accent border border-accent-subtle mb-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-accent animate-subtle-pulse" aria-hidden="true" />
+                <span>Active: {activeSemester.name}</span>
+              </div>
+              <h2 className="text-base font-semibold text-charcoal">
+                No subjects added to &quot;{activeSemester.name}&quot;
+              </h2>
+              <p className="text-xs text-charcoal-muted max-w-md mx-auto mt-1 leading-relaxed">
+                Add your course subjects to start logging class sessions and calculating recovery requirements.
+              </p>
+            </div>
+
+            {/* Preview of what a tracked subject will look like */}
+            <div className="p-3.5 rounded-md bg-background-subtle border border-border text-left max-w-sm mx-auto space-y-2 opacity-85">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-semibold text-charcoal">Sample Course • CS101</span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-accent-light text-accent font-medium">Eligible</span>
+              </div>
+              <div className="w-full bg-background-muted h-1.5 rounded overflow-hidden">
+                <div className="bg-accent h-full w-[80%]" />
+              </div>
+              <div className="flex items-center justify-between text-[11px] text-charcoal-muted tabular-nums">
+                <span>16 / 20 classes</span>
+                <span className="text-accent font-medium">80.0% (target 75%)</span>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-2.5 pt-2">
+              <button
+                type="button"
+                onClick={() => onNavigate('subjects')}
+                className="px-4 py-2 text-xs font-medium bg-accent text-white rounded-md hover:bg-accent-hover transition-all duration-200 tactile-button shadow-2xs inline-flex items-center gap-1.5"
+              >
+                <Plus className="w-3.5 h-3.5" aria-hidden="true" />
+                <span>Add First Subject</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => onNavigate('semesters')}
+                className="px-4 py-2 text-xs font-medium bg-background border border-border text-charcoal-muted hover:text-charcoal rounded-md hover:bg-background-subtle transition-all duration-200 tactile-button"
+              >
+                <span>Switch Semester</span>
+              </button>
+            </div>
+          </div>
+        </div>
       ) : (
         <div className="space-y-6">
           {/* Active Semester Summary Banner & Overall Metrics */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {/* Overall Attendance Card */}
-            <div className="p-5 bg-background border border-border rounded shadow-2xs flex flex-col justify-between space-y-3">
+            <div className="interactive-card p-5 flex flex-col justify-between space-y-3">
               <div>
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold text-charcoal uppercase tracking-wider">
                     Overall Attendance
                   </span>
-                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-forest/10 text-forest border border-forest/20">
+                  <span className="text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-accent-light text-accent border border-accent-subtle">
                     {activeSemester.name}
                   </span>
                 </div>
 
-                <div className="flex items-baseline justify-between mt-2">
-                  <div className="text-3xl font-bold font-mono text-charcoal">
+                <div className="flex items-baseline justify-between mt-2.5">
+                  <div className="text-3xl font-bold font-mono text-charcoal tracking-tight tabular-nums">
                     {overall.overallPercentage !== null
                       ? formatAttendancePercentage(overall.overallPercentage)
                       : '—'}
                   </div>
-                  <div className="text-xs text-charcoal-muted font-mono">
-                    <strong className="text-forest">{overall.totalClassesAttended}</strong> / {overall.totalClassesHeld} classes
+                  <div className="text-xs text-charcoal-muted tabular-nums">
+                    <strong className="text-accent font-semibold">{overall.totalClassesAttended}</strong> / {overall.totalClassesHeld} classes
                   </div>
                 </div>
 
-                <div className="mt-2.5">
+                <div className="mt-3">
                   <AttendanceProgress
                     classesHeld={overall.totalClassesHeld}
                     classesAttended={overall.totalClassesAttended}
@@ -251,27 +324,27 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-border flex items-center justify-between text-[11px] text-charcoal-muted">
+              <div className="pt-2.5 border-t border-border flex items-center justify-between text-[11px] text-charcoal-muted">
                 <span>Weighted across {subjects.length} subject{subjects.length > 1 ? 's' : ''}</span>
-                <span>Avg Target: {averageTarget}%</span>
+                <span className="font-medium text-charcoal">Avg Target: {averageTarget}%</span>
               </div>
             </div>
 
             {/* Target Status Breakdown Card */}
-            <div className="p-5 bg-background border border-border rounded shadow-2xs flex flex-col justify-between space-y-3">
+            <div className="interactive-card p-5 flex flex-col justify-between space-y-3">
               <div>
                 <span className="text-xs font-semibold text-charcoal uppercase tracking-wider">
                   Target Compliance
                 </span>
 
-                <div className="grid grid-cols-2 gap-2 mt-3">
+                <div className="grid grid-cols-2 gap-2.5 mt-3">
                   {/* Meeting Target */}
-                  <div className="p-2.5 rounded bg-forest/5 border border-forest/20">
-                    <div className="flex items-center gap-1.5 text-xs text-forest font-medium">
+                  <div className="p-3 rounded-md bg-accent-light/50 border border-accent-subtle/80 hover:bg-accent-light transition-colors duration-200">
+                    <div className="flex items-center gap-1.5 text-xs text-accent font-medium">
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       <span>On Track</span>
                     </div>
-                    <div className="text-2xl font-bold font-mono text-forest mt-1">
+                    <div className="text-2xl font-bold font-mono text-accent mt-1 tabular-nums">
                       {totalEligibleCount}
                     </div>
                     <div className="text-[10px] text-charcoal-muted mt-0.5">
@@ -280,12 +353,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   </div>
 
                   {/* Below Target */}
-                  <div className="p-2.5 rounded bg-amber-50/60 border border-amber-200">
+                  <div className="p-3 rounded-md bg-amber-50/70 border border-amber-200/90 hover:bg-amber-50 transition-colors duration-200">
                     <div className="flex items-center gap-1.5 text-xs text-amber-900 font-medium">
                       <AlertTriangle className="w-3.5 h-3.5 text-amber-700" />
                       <span>Below Target</span>
                     </div>
-                    <div className="text-2xl font-bold font-mono text-amber-900 mt-1">
+                    <div className="text-2xl font-bold font-mono text-amber-900 mt-1 tabular-nums">
                       {categorizedSubjects.belowTarget.length}
                     </div>
                     <div className="text-[10px] text-charcoal-muted mt-0.5">
@@ -295,9 +368,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-border text-[11px] text-charcoal-muted">
+              <div className="pt-2.5 border-t border-border text-[11px] text-charcoal-muted">
                 {categorizedSubjects.belowTarget.length === 0 ? (
-                  <span className="text-forest font-medium">Excellent: All active subjects meet your attendance targets!</span>
+                  <span className="text-accent font-medium">Excellent: All active subjects meet your attendance targets!</span>
                 ) : (
                   <span>Review recovery calculations below to plan upcoming attendance.</span>
                 )}
@@ -305,13 +378,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
 
             {/* Quick Action & Today Shortcut Card */}
-            <div className="p-5 bg-background border border-border rounded shadow-2xs flex flex-col justify-between space-y-3">
+            <div className="interactive-card p-5 flex flex-col justify-between space-y-3">
               <div>
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-semibold text-charcoal uppercase tracking-wider">
                     Today&apos;s Entry
                   </span>
-                  <span className="text-[11px] font-mono text-charcoal-muted">
+                  <span className="text-[11px] font-mono text-charcoal-muted bg-background-subtle px-2 py-0.5 rounded border border-border/60">
                     {todayStr}
                   </span>
                 </div>
@@ -326,14 +399,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-border">
+              <div className="pt-2.5 border-t border-border">
                 <button
                   type="button"
                   onClick={() => onNavigate('history')}
-                  className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium bg-charcoal text-white rounded hover:bg-charcoal/90 focus-visible:ring-2 focus-visible:ring-forest outline-none transition-colors"
+                  className="group w-full inline-flex items-center justify-center gap-1.5 px-3 py-2 text-xs font-medium bg-charcoal text-white rounded-md hover:bg-charcoal/90 focus-visible:ring-2 focus-visible:ring-accent outline-none transition-all duration-200 tactile-button shadow-2xs"
                 >
                   <span>Open Daily Logger</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform duration-200" />
                 </button>
               </div>
             </div>
@@ -357,7 +430,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
             {/* Tier 1: Below Target (Needs Attention) */}
             {categorizedSubjects.belowTarget.length > 0 && (
-              <div className="space-y-2">
+              <div className="space-y-2.5">
                 <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-900">
                   <AlertTriangle className="w-3.5 h-3.5 text-amber-700" />
                   <span>Below Target ({categorizedSubjects.belowTarget.length}) — Recovery Action Needed</span>
@@ -367,7 +440,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   {categorizedSubjects.belowTarget.map(({ subject, metrics }) => (
                     <div
                       key={subject.id}
-                      className="p-4 rounded bg-background border border-amber-300 shadow-2xs space-y-2.5"
+                      className="interactive-card p-4 border-amber-300 shadow-2xs space-y-2.5"
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div>
@@ -386,7 +459,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                         />
                       </div>
 
-                      <div className="flex items-baseline justify-between text-xs">
+                      <div className="flex items-baseline justify-between text-xs tabular-nums">
                         <span className="font-bold text-amber-900 font-mono">
                           {metrics.currentPercentage !== null
                             ? formatAttendancePercentage(metrics.currentPercentage)
@@ -423,7 +496,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
             {/* Tier 2: Borderline / Close to Target */}
             {categorizedSubjects.closeToTarget.length > 0 && (
-              <div className="space-y-2">
+              <div className="space-y-2.5">
                 <div className="flex items-center gap-1.5 text-xs font-semibold text-charcoal">
                   <Sparkles className="w-3.5 h-3.5 text-stone-500" />
                   <span>Borderline ({categorizedSubjects.closeToTarget.length}) — Thin Safe Margin</span>
@@ -433,7 +506,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   {categorizedSubjects.closeToTarget.map(({ subject, metrics }) => (
                     <div
                       key={subject.id}
-                      className="p-4 rounded bg-background border border-border shadow-2xs space-y-2.5"
+                      className="interactive-card p-4 shadow-2xs space-y-2.5"
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div>
@@ -452,8 +525,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                         />
                       </div>
 
-                      <div className="flex items-baseline justify-between text-xs">
-                        <span className="font-bold text-forest font-mono">
+                      <div className="flex items-baseline justify-between text-xs tabular-nums">
+                        <span className="font-bold text-accent font-mono">
                           {metrics.currentPercentage !== null
                             ? formatAttendancePercentage(metrics.currentPercentage)
                             : '—'}
@@ -483,8 +556,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
             {/* Tier 3: Comfortably Above Target */}
             {categorizedSubjects.comfortablyAbove.length > 0 && (
-              <div className="space-y-2">
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-forest">
+              <div className="space-y-2.5">
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-accent">
                   <CheckCircle2 className="w-3.5 h-3.5" />
                   <span>Comfortably On Track ({categorizedSubjects.comfortablyAbove.length})</span>
                 </div>
@@ -493,7 +566,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   {categorizedSubjects.comfortablyAbove.map(({ subject, metrics }) => (
                     <div
                       key={subject.id}
-                      className="p-4 rounded bg-background border border-border shadow-2xs space-y-2.5"
+                      className="interactive-card p-4 shadow-2xs space-y-2.5"
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div>
@@ -512,8 +585,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                         />
                       </div>
 
-                      <div className="flex items-baseline justify-between text-xs">
-                        <span className="font-bold text-forest font-mono">
+                      <div className="flex items-baseline justify-between text-xs tabular-nums">
+                        <span className="font-bold text-accent font-mono">
                           {metrics.currentPercentage !== null
                             ? formatAttendancePercentage(metrics.currentPercentage)
                             : '—'}
@@ -532,7 +605,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                         size="sm"
                       />
 
-                      <div className="p-2 rounded bg-forest/5 border border-forest/15 text-[11px] text-forest">
+                      <div className="p-2 rounded bg-accent-light/50 border border-accent-subtle/80 text-[11px] text-accent">
                         <span>Safe bunks available: <strong className="font-semibold">{metrics.safeBunkCount}</strong> class{metrics.safeBunkCount !== 1 ? 'es' : ''}.</span>
                       </div>
                     </div>
@@ -546,13 +619,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <div className="space-y-3 pt-2">
             <div className="flex items-center justify-between pb-2 border-b border-border">
               <div className="flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-forest" />
+                <Clock className="w-3.5 h-3.5 text-accent" />
                 <h2 className="text-sm font-semibold text-charcoal">Recent Attendance Activity</h2>
               </div>
               <button
                 type="button"
                 onClick={() => onNavigate('history')}
-                className="text-xs text-forest hover:text-forest/80 underline underline-offset-2 flex items-center gap-1"
+                className="text-xs text-accent hover:text-accent-hover font-medium underline underline-offset-2 flex items-center gap-1 transition-colors"
               >
                 <span>View Full History</span>
                 <ArrowRight className="w-3 h-3" />
@@ -560,28 +633,28 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
 
             {isLoadingRecent ? (
-              <div className="p-6 text-center text-xs text-charcoal-muted animate-pulse bg-background border border-border rounded">
+              <div className="p-6 text-center text-xs text-charcoal-muted animate-pulse bg-background border border-border rounded-md">
                 Loading recent activity...
               </div>
             ) : recentRecords.length === 0 ? (
-              <div className="p-6 rounded bg-background border border-border text-center text-xs text-charcoal-muted space-y-1">
+              <div className="p-6 rounded-md bg-background border border-border text-center text-xs text-charcoal-muted space-y-1">
                 <p className="font-medium text-charcoal">No Attendance Logged Yet</p>
                 <p>Click &quot;Log Today&apos;s Attendance&quot; above to record your first class session.</p>
               </div>
             ) : (
-              <div className="divide-y divide-border border border-border rounded bg-background shadow-2xs overflow-hidden">
+              <div className="divide-y divide-border border border-border rounded-lg bg-white shadow-2xs overflow-hidden">
                 {recentRecords.map((item) => {
                   const relativeBadge = getRelativeDateBadge(item.date);
                   return (
                     <div
                       key={item.id}
-                      className="p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:bg-background-subtle/50 transition-colors text-xs"
+                      className="p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 hover:bg-background-subtle/60 transition-colors duration-150 text-xs"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="font-mono font-medium text-charcoal min-w-[5.5rem]">
+                        <div className="font-mono font-medium text-charcoal min-w-[5.5rem] tabular-nums">
                           {item.date}
                           {relativeBadge && (
-                            <span className="ml-1.5 text-[10px] px-1 py-0.2 rounded bg-forest/10 text-forest border border-forest/20 font-sans">
+                            <span className="ml-1.5 text-[10px] px-1.5 py-0.5 rounded-full bg-accent-light text-accent border border-accent-subtle font-sans font-medium">
                               {relativeBadge}
                             </span>
                           )}
@@ -608,17 +681,17 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                           </span>
                         )}
 
-                        <span className="font-mono font-semibold">
-                          <span className="text-forest">{item.classesAttended}</span>
+                        <span className="font-mono font-semibold tabular-nums">
+                          <span className="text-accent">{item.classesAttended}</span>
                           <span className="text-charcoal-muted"> / {item.classesHeld}</span>
                         </span>
 
                         <span
-                          className={`px-1.5 py-0.5 rounded text-[10px] font-mono border ${
+                          className={`px-2 py-0.5 rounded text-[10px] font-mono border tabular-nums ${
                             item.status === 'full'
-                              ? 'bg-forest/10 text-forest border-forest/20'
+                              ? 'bg-accent-light text-accent border-accent-subtle font-semibold'
                               : item.status === 'zero'
-                              ? 'bg-amber-100/90 text-amber-900 border-amber-300'
+                              ? 'bg-amber-100/90 text-amber-900 border-amber-300 font-semibold'
                               : 'bg-stone-100 text-charcoal border-stone-200'
                           }`}
                         >
@@ -644,15 +717,15 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </p>
               </div>
 
-              <div className="inline-flex items-center rounded border border-border bg-background p-1 self-start sm:self-auto">
+              <div className="inline-flex items-center rounded-lg border border-border bg-background-subtle p-1 self-start sm:self-auto">
                 <button
                   type="button"
                   onClick={() => setCalculatorTab('recovery')}
                   aria-pressed={calculatorTab === 'recovery'}
-                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium transition-colors ${
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 tactile-button ${
                     calculatorTab === 'recovery'
-                      ? 'bg-charcoal text-white shadow-2xs'
-                      : 'text-charcoal-muted hover:text-charcoal hover:bg-background-subtle'
+                      ? 'bg-charcoal text-white shadow-2xs font-semibold'
+                      : 'text-charcoal-muted hover:text-charcoal hover:bg-white/60'
                   }`}
                 >
                   <Calculator className="w-3.5 h-3.5" aria-hidden="true" />
@@ -662,10 +735,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   type="button"
                   onClick={() => setCalculatorTab('safebunk')}
                   aria-pressed={calculatorTab === 'safebunk'}
-                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-medium transition-colors ${
+                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 tactile-button ${
                     calculatorTab === 'safebunk'
-                      ? 'bg-charcoal text-white shadow-2xs'
-                      : 'text-charcoal-muted hover:text-charcoal hover:bg-background-subtle'
+                      ? 'bg-charcoal text-white shadow-2xs font-semibold'
+                      : 'text-charcoal-muted hover:text-charcoal hover:bg-white/60'
                   }`}
                 >
                   <ShieldCheck className="w-3.5 h-3.5" aria-hidden="true" />
@@ -674,19 +747,21 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </div>
             </div>
 
-            {calculatorTab === 'recovery' ? (
-              <AttendanceCalculator
-                initialHeld={totalClassesHeldInSemester || 20}
-                initialAttended={overall.totalClassesAttended || 15}
-                initialTarget={averageTarget}
-              />
-            ) : (
-              <SafeBunkCalculator
-                initialHeld={totalClassesHeldInSemester || 24}
-                initialAttended={overall.totalClassesAttended || 21}
-                initialTarget={averageTarget}
-              />
-            )}
+            <div className="tactile-card p-4 sm:p-5">
+              {calculatorTab === 'recovery' ? (
+                <AttendanceCalculator
+                  initialHeld={totalClassesHeldInSemester || 20}
+                  initialAttended={overall.totalClassesAttended || 15}
+                  initialTarget={averageTarget}
+                />
+              ) : (
+                <SafeBunkCalculator
+                  initialHeld={totalClassesHeldInSemester || 24}
+                  initialAttended={overall.totalClassesAttended || 21}
+                  initialTarget={averageTarget}
+                />
+              )}
+            </div>
           </div>
         </div>
       )}

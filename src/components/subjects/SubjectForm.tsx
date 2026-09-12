@@ -147,7 +147,7 @@ export const SubjectForm: React.FC<SubjectFormProps> = ({
         e.preventDefault();
         onClose();
       }}
-      className="m-auto p-0 rounded-md bg-background border border-border shadow-md max-w-md w-[92%] backdrop:bg-charcoal/40 backdrop:backdrop-blur-sm outline-none"
+      className="m-auto p-0 rounded-lg bg-white border border-border shadow-xl max-w-md w-[92%] backdrop:bg-charcoal/40 backdrop:backdrop-blur-sm outline-none animate-scale-in"
     >
       <div className="p-5 space-y-4">
         {/* Header */}

@@ -217,9 +217,9 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ storage, onDataChang
       )}
 
       {/* General Preferences Card */}
-      <div className="p-5 rounded bg-background border border-border shadow-2xs space-y-4">
+      <div className="tactile-card p-5 sm:p-6 space-y-4">
         <div className="flex items-center gap-2 pb-2 border-b border-border">
-          <Percent className="w-4 h-4 text-forest" />
+          <Percent className="w-4 h-4 text-accent" />
           <h2 className="text-sm font-semibold text-charcoal">Attendance Targets &amp; Calendar Preferences</h2>
         </div>
 
@@ -287,7 +287,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ storage, onDataChang
             <button
               type="submit"
               disabled={isSavingSettings}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-forest text-white rounded hover:bg-forest/90 focus-visible:ring-2 focus-visible:ring-forest outline-none shadow-2xs transition-colors"
+              className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-medium bg-accent text-white rounded-md hover:bg-accent-hover focus-visible:ring-2 focus-visible:ring-accent outline-none shadow-2xs transition-all duration-150 tactile-button"
             >
               <Save className="w-3.5 h-3.5" />
               <span>{isSavingSettings ? 'Saving...' : 'Save Preferences'}</span>
@@ -297,13 +297,13 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ storage, onDataChang
       </div>
 
       {/* Local-First Backup & Recovery Card */}
-      <div className="p-5 rounded bg-background border border-border shadow-2xs space-y-4">
+      <div className="tactile-card p-5 sm:p-6 space-y-4">
         <div className="flex items-center justify-between pb-2 border-b border-border">
           <div className="flex items-center gap-2">
-            <Database className="w-4 h-4 text-forest" />
+            <Database className="w-4 h-4 text-accent" />
             <h2 className="text-sm font-semibold text-charcoal">Backup &amp; Recovery</h2>
           </div>
-          <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-forest/10 text-forest border border-forest/20">
+          <span className="text-[11px] font-mono px-2 py-0.5 rounded-full bg-accent-light text-accent border border-accent-subtle">
             Schema v1
           </span>
         </div>
@@ -329,7 +329,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ storage, onDataChang
             type="button"
             onClick={handleExportBackup}
             disabled={isExporting}
-            className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-medium bg-forest text-white rounded hover:bg-forest/90 focus-visible:ring-2 focus-visible:ring-forest outline-none shadow-2xs transition-colors"
+            className="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-medium bg-accent text-white rounded-md hover:bg-accent-hover focus-visible:ring-2 focus-visible:ring-accent outline-none shadow-2xs transition-all duration-150 tactile-button"
           >
             <Download className="w-3.5 h-3.5" />
             <span>{isExporting ? 'Exporting...' : 'Export JSON Backup'}</span>
@@ -347,7 +347,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ storage, onDataChang
             />
             <label
               htmlFor="import-backup-file-input"
-              className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs font-medium text-charcoal bg-background border border-border rounded hover:bg-background-subtle focus-visible:ring-2 focus-visible:ring-forest outline-none cursor-pointer transition-colors"
+              className="inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs font-medium text-charcoal bg-white border border-border rounded-md hover:bg-background-subtle focus-visible:ring-2 focus-visible:ring-accent outline-none cursor-pointer transition-all duration-150 tactile-button shadow-2xs"
             >
               <Upload className="w-3.5 h-3.5 text-stone-500" />
               <span>Import JSON Backup</span>
@@ -363,10 +363,10 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ storage, onDataChang
           aria-labelledby="import-preview-title"
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-charcoal/40 backdrop-blur-xs motion-safe:animate-fadeIn"
         >
-          <div className="bg-background border border-border rounded shadow-lg max-w-md w-full p-5 space-y-4">
+          <div className="bg-white border border-border rounded-lg shadow-xl max-w-md w-full p-5 space-y-4 animate-scale-in">
             <div className="flex items-center justify-between pb-2 border-b border-border">
               <div className="flex items-center gap-2">
-                <FileCheck className="w-4 h-4 text-forest" />
+                <FileCheck className="w-4 h-4 text-accent" />
                 <h3 id="import-preview-title" className="text-sm font-semibold text-charcoal">
                   Restore Backup Preview
                 </h3>
@@ -427,7 +427,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ storage, onDataChang
               <button
                 type="button"
                 onClick={handleConfirmImport}
-                className="px-3 py-1.5 text-xs font-medium bg-forest text-white rounded hover:bg-forest/90 focus-visible:ring-2 focus-visible:ring-forest outline-none shadow-xs"
+                className="px-3.5 py-1.5 text-xs font-medium bg-accent text-white rounded-md hover:bg-accent-hover focus-visible:ring-2 focus-visible:ring-accent outline-none shadow-2xs transition-colors tactile-button"
               >
                 Confirm &amp; Restore Data
               </button>
@@ -437,19 +437,19 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ storage, onDataChang
       )}
 
       {/* Danger Zone: Reset All Local Data */}
-      <div className="p-5 rounded bg-background border border-amber-200 shadow-2xs space-y-3">
+      <div className="tactile-card p-5 sm:p-6 space-y-3 border-amber-300/80">
         <div className="flex items-center gap-2">
           <Trash2 className="w-4 h-4 text-red-600" />
           <h2 className="text-sm font-semibold text-charcoal">Reset Application Data</h2>
         </div>
         <p className="text-xs text-charcoal-muted leading-relaxed">
-          Erase all semesters, subjects, and attendance records from your browser's local storage. This action
+          Erase all semesters, subjects, and attendance records from your browser&apos;s local storage. This action
           cannot be undone unless you have an exported JSON backup file.
         </p>
         <button
           type="button"
           onClick={() => setIsConfirmingClear(true)}
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-red-700 bg-red-50 border border-red-200 rounded hover:bg-red-100 focus-visible:ring-2 focus-visible:ring-red-600 outline-none transition-colors"
+          className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium text-red-700 bg-red-50 border border-red-200 rounded-md hover:bg-red-100 focus-visible:ring-2 focus-visible:ring-red-600 outline-none transition-all duration-150 tactile-button shadow-2xs"
         >
           <Trash2 className="w-3.5 h-3.5" />
           <span>Reset All Local Data</span>

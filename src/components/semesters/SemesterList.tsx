@@ -42,9 +42,9 @@ export const SemesterList: React.FC<SemesterListProps> = ({
           type="button"
           onClick={() => setTab('active')}
           aria-pressed={tab === 'active'}
-          className={`px-3 py-1.5 rounded font-medium transition-colors ${
+          className={`px-3 py-1.5 rounded-md font-medium transition-all duration-150 tactile-button ${
             tab === 'active'
-              ? 'bg-accent text-white font-semibold'
+              ? 'bg-accent text-white font-semibold shadow-2xs'
               : 'text-charcoal-muted hover:text-charcoal hover:bg-background-subtle border border-border'
           }`}
         >
@@ -54,9 +54,9 @@ export const SemesterList: React.FC<SemesterListProps> = ({
           type="button"
           onClick={() => setTab('archived')}
           aria-pressed={tab === 'archived'}
-          className={`px-3 py-1.5 rounded font-medium transition-colors ${
+          className={`px-3 py-1.5 rounded-md font-medium transition-all duration-150 tactile-button ${
             tab === 'archived'
-              ? 'bg-accent text-white font-semibold'
+              ? 'bg-accent text-white font-semibold shadow-2xs'
               : 'text-charcoal-muted hover:text-charcoal hover:bg-background-subtle border border-border'
           }`}
         >
@@ -66,7 +66,7 @@ export const SemesterList: React.FC<SemesterListProps> = ({
 
       {/* Empty list notice */}
       {currentList.length === 0 ? (
-        <div className="p-6 text-center text-xs text-charcoal-muted bg-background-subtle border border-border rounded">
+        <div className="p-8 text-center text-xs text-charcoal-muted bg-background-subtle border border-border rounded-md">
           {tab === 'active'
             ? 'No active semesters found. Create one above to get started.'
             : 'No archived semesters yet. When a term ends, you can archive it here.'}
@@ -80,10 +80,10 @@ export const SemesterList: React.FC<SemesterListProps> = ({
             return (
               <div
                 key={semester.id}
-                className={`p-4 bg-background border rounded transition-colors ${
+                className={`interactive-card p-4 sm:p-5 transition-all duration-200 ${
                   isCurrentlyActive
-                    ? 'border-accent bg-accent-light/10 shadow-sm'
-                    : 'border-border hover:border-border-strong'
+                    ? 'border-accent bg-accent-light/10 shadow-xs ring-1 ring-accent/30'
+                    : 'hover:border-border-strong'
                 }`}
               >
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -94,7 +94,8 @@ export const SemesterList: React.FC<SemesterListProps> = ({
                         {semester.name}
                       </h3>
                       {isCurrentlyActive && (
-                        <span className="inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded bg-status-eligibleBg text-status-eligible border border-[#cbe0d3]">
+                        <span className="inline-flex items-center gap-1.5 text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-accent-light text-accent border border-accent-subtle">
+                          <span className="w-1.5 h-1.5 rounded-full bg-accent animate-subtle-pulse" aria-hidden="true" />
                           <Check className="w-3 h-3" aria-hidden="true" />
                           Current Active
                         </span>
@@ -136,7 +137,7 @@ export const SemesterList: React.FC<SemesterListProps> = ({
                       <button
                         type="button"
                         onClick={() => onSetActive(semester.id)}
-                        className="px-2.5 py-1 text-xs font-medium bg-accent-light text-accent border border-accent-subtle rounded hover:bg-accent hover:text-white transition-colors"
+                        className="px-3 py-1.5 text-xs font-medium bg-accent-light text-accent border border-accent-subtle rounded-md hover:bg-accent hover:text-white transition-all duration-150 tactile-button"
                       >
                         Set Active
                       </button>
@@ -145,7 +146,7 @@ export const SemesterList: React.FC<SemesterListProps> = ({
                     <button
                       type="button"
                       onClick={() => onEdit(semester)}
-                      className="p-1.5 text-charcoal-muted hover:text-charcoal hover:bg-background-subtle border border-border rounded transition-colors"
+                      className="p-1.5 text-charcoal-muted hover:text-charcoal hover:bg-background-subtle border border-border rounded-md transition-all duration-150 tactile-button"
                       title="Edit semester"
                       aria-label={`Edit ${semester.name}`}
                     >
@@ -156,7 +157,7 @@ export const SemesterList: React.FC<SemesterListProps> = ({
                       <button
                         type="button"
                         onClick={() => onArchive(semester)}
-                        className="p-1.5 text-charcoal-muted hover:text-charcoal hover:bg-background-subtle border border-border rounded transition-colors"
+                        className="p-1.5 text-charcoal-muted hover:text-charcoal hover:bg-background-subtle border border-border rounded-md transition-all duration-150 tactile-button"
                         title="Archive semester"
                         aria-label={`Archive ${semester.name}`}
                       >
@@ -166,7 +167,7 @@ export const SemesterList: React.FC<SemesterListProps> = ({
                       <button
                         type="button"
                         onClick={() => onUnarchive(semester)}
-                        className="p-1.5 text-charcoal-muted hover:text-charcoal hover:bg-background-subtle border border-border rounded transition-colors"
+                        className="p-1.5 text-charcoal-muted hover:text-charcoal hover:bg-background-subtle border border-border rounded-md transition-all duration-150 tactile-button"
                         title="Restore semester to active"
                         aria-label={`Restore ${semester.name}`}
                       >
@@ -177,7 +178,7 @@ export const SemesterList: React.FC<SemesterListProps> = ({
                     <button
                       type="button"
                       onClick={() => onDelete(semester)}
-                      className="p-1.5 text-[#a83232] hover:bg-status-ineligibleBg border border-border rounded transition-colors"
+                      className="p-1.5 text-[#a83232] hover:bg-status-ineligibleBg border border-border rounded-md transition-all duration-150 tactile-button"
                       title="Delete semester"
                       aria-label={`Delete ${semester.name}`}
                     >

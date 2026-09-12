@@ -215,7 +215,7 @@ export const SafeBunkCalculator: React.FC<SafeBunkCalculatorProps> = ({
       {/* Main Safe Bunk Result */}
       {isValid && (
         <div className="space-y-4">
-          <div className="p-4 rounded border bg-background-subtle border-border space-y-2">
+          <div className="p-4 rounded-lg border bg-white border-border shadow-2xs space-y-2">
             <div className="flex items-baseline justify-between">
               <span className="text-xs text-charcoal-muted">Consecutive Safe Bunks:</span>
               <span className="text-lg font-bold text-charcoal tabular-nums">

@@ -80,12 +80,12 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
       aria-describedby={descId}
       onClick={handleDialogClick}
       onCancel={handleCancel}
-      className="m-auto p-0 rounded-md bg-background border border-border shadow-md max-w-sm w-[90%] backdrop:bg-charcoal/40 backdrop:backdrop-blur-sm outline-none"
+      className="m-auto p-0 rounded-lg bg-white border border-border shadow-lg max-w-sm w-[90%] backdrop:bg-charcoal/40 backdrop:backdrop-blur-sm outline-none animate-scale-in"
     >
       <div className="p-5 space-y-4">
         <div className="flex items-start gap-3">
           {isDestructive && (
-            <div className="p-2 rounded bg-status-ineligibleBg text-status-ineligible shrink-0">
+            <div className="p-2 rounded-md bg-status-ineligibleBg text-status-ineligible shrink-0">
               <AlertTriangle className="w-4 h-4" aria-hidden="true" />
             </div>
           )}
@@ -103,14 +103,14 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
           <button
             type="button"
             onClick={onCancel}
-            className="px-3 py-1.5 text-xs font-medium text-charcoal-muted bg-background border border-border rounded hover:text-charcoal hover:bg-background-subtle transition-colors"
+            className="px-3 py-1.5 text-xs font-medium text-charcoal-muted bg-background border border-border rounded-md hover:text-charcoal hover:bg-background-subtle transition-all duration-150 tactile-button"
           >
             {cancelLabel}
           </button>
           <button
             type="button"
             onClick={onConfirm}
-            className={`px-3 py-1.5 text-xs font-medium rounded transition-colors ${
+            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-150 tactile-button shadow-2xs ${
               isDestructive
                 ? 'bg-status-ineligible text-white hover:bg-[#8e2525]'
                 : 'bg-accent text-white hover:bg-accent-hover'

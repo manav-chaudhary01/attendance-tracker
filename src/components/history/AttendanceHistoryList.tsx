@@ -284,7 +284,7 @@ export const AttendanceHistoryList: React.FC<AttendanceHistoryListProps> = ({
       )}
 
       {/* Filter Toolbar */}
-      <div className="p-4 rounded bg-background border border-border shadow-2xs space-y-4">
+      <div className="tactile-card p-4 sm:p-5 space-y-4">
         <div className="flex items-center justify-between pb-2 border-b border-border">
           <div className="flex items-center gap-1.5 text-xs font-semibold text-charcoal">
             <Filter className="w-3.5 h-3.5 text-forest" />
@@ -459,7 +459,7 @@ export const AttendanceHistoryList: React.FC<AttendanceHistoryListProps> = ({
             <span>
               Rate:{' '}
               <strong className="text-charcoal font-medium">
-                {summaryStats.pct !== null ? `${formatAttendancePercentage(summaryStats.pct)}%` : '—'}
+                {summaryStats.pct !== null ? formatAttendancePercentage(summaryStats.pct) : '—'}
               </strong>
             </span>
           </div>
@@ -648,7 +648,7 @@ export const AttendanceHistoryList: React.FC<AttendanceHistoryListProps> = ({
           aria-labelledby="edit-record-title"
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-charcoal/40 backdrop-blur-xs motion-safe:animate-fadeIn"
         >
-          <div className="bg-background border border-border rounded shadow-lg max-w-md w-full p-5 space-y-4">
+          <div className="bg-white border border-border rounded-lg shadow-xl max-w-md w-full p-5 space-y-4 animate-scale-in">
             <div className="flex items-center justify-between pb-2 border-b border-border">
               <h3 id="edit-record-title" className="text-sm font-semibold text-charcoal">
                 Edit Attendance Record

@@ -23,18 +23,18 @@ export const SubjectCard: React.FC<SubjectCardProps> = ({
   );
 
   return (
-    <div className="p-4 bg-background border border-border rounded shadow-xs hover:border-border-strong transition-colors space-y-3">
+    <div className="interactive-card p-4 space-y-3.5 group">
       {/* Top row: Subject name, code, status & actions */}
       <div className="flex items-start justify-between gap-2">
         <div className="space-y-1">
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-1.5">
             <h3 className="text-sm font-semibold text-charcoal">{subject.name}</h3>
             {subject.subjectCode && (
               <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-background-subtle border border-border text-charcoal-muted uppercase">
                 {subject.subjectCode}
               </span>
             )}
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-background-subtle border border-border text-charcoal-light">
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-background-subtle border border-border text-charcoal-light tabular-nums">
               Target {subject.attendanceTarget}%
             </span>
             {subject.trackingMode === 'manual' && (
@@ -49,7 +49,7 @@ export const SubjectCard: React.FC<SubjectCardProps> = ({
           <button
             type="button"
             onClick={() => onEdit(subject)}
-            className="p-1.5 text-charcoal-muted hover:text-charcoal hover:bg-background-subtle border border-border rounded transition-colors"
+            className="p-1.5 text-charcoal-muted hover:text-charcoal hover:bg-background-subtle border border-border rounded-md transition-all duration-150 tactile-button"
             title="Edit subject"
             aria-label={`Edit ${subject.name}`}
           >
@@ -58,7 +58,7 @@ export const SubjectCard: React.FC<SubjectCardProps> = ({
           <button
             type="button"
             onClick={() => onDelete(subject)}
-            className="p-1.5 text-[#a83232] hover:bg-status-ineligibleBg border border-border rounded transition-colors"
+            className="p-1.5 text-[#a83232] hover:bg-status-ineligibleBg border border-border rounded-md transition-all duration-150 tactile-button"
             title="Delete subject"
             aria-label={`Delete ${subject.name}`}
           >

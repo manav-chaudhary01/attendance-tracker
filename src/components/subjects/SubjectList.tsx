@@ -89,7 +89,7 @@ export const SubjectList: React.FC<SubjectListProps> = ({
             placeholder="Search subjects or course codes..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-8 pr-3 py-1.5 text-xs bg-background border border-border rounded focus:border-accent text-charcoal outline-none"
+            className="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-border rounded-md focus:border-accent focus:ring-1 focus:ring-accent text-charcoal outline-none transition-all duration-150"
           />
         </div>
 
@@ -98,9 +98,9 @@ export const SubjectList: React.FC<SubjectListProps> = ({
           <button
             type="button"
             onClick={() => setStatusFilter('all')}
-            className={`px-2.5 py-1 rounded font-medium transition-colors ${
+            className={`px-3 py-1.5 rounded-md font-medium transition-all duration-150 tactile-button ${
               statusFilter === 'all'
-                ? 'bg-accent text-white'
+                ? 'bg-accent text-white shadow-2xs'
                 : 'text-charcoal-muted hover:text-charcoal hover:bg-background-subtle border border-border'
             }`}
           >
@@ -109,9 +109,9 @@ export const SubjectList: React.FC<SubjectListProps> = ({
           <button
             type="button"
             onClick={() => setStatusFilter('eligible')}
-            className={`px-2.5 py-1 rounded font-medium transition-colors ${
+            className={`px-3 py-1.5 rounded-md font-medium transition-all duration-150 tactile-button ${
               statusFilter === 'eligible'
-                ? 'bg-accent text-white'
+                ? 'bg-accent text-white shadow-2xs'
                 : 'text-charcoal-muted hover:text-charcoal hover:bg-background-subtle border border-border'
             }`}
           >
@@ -120,9 +120,9 @@ export const SubjectList: React.FC<SubjectListProps> = ({
           <button
             type="button"
             onClick={() => setStatusFilter('at_risk')}
-            className={`px-2.5 py-1 rounded font-medium transition-colors ${
+            className={`px-3 py-1.5 rounded-md font-medium transition-all duration-150 tactile-button ${
               statusFilter === 'at_risk'
-                ? 'bg-accent text-white'
+                ? 'bg-accent text-white shadow-2xs'
                 : 'text-charcoal-muted hover:text-charcoal hover:bg-background-subtle border border-border'
             }`}
           >
@@ -133,7 +133,7 @@ export const SubjectList: React.FC<SubjectListProps> = ({
 
       {/* Subject cards grid */}
       {filtered.length === 0 ? (
-        <div className="p-8 text-center text-xs text-charcoal-muted bg-background-subtle border border-border rounded">
+        <div className="p-8 text-center text-xs text-charcoal-muted bg-background-subtle border border-border rounded-md">
           No subjects match your search or filter.
         </div>
       ) : (

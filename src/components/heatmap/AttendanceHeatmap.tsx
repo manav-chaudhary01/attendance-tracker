@@ -236,22 +236,22 @@ export const AttendanceHeatmap: React.FC<AttendanceHeatmapProps> = ({
 
       {/* Summary Metrics */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        <div className="bg-background border border-border rounded p-3 text-center">
+        <div className="tactile-card p-3.5 text-center">
           <div className="text-[11px] font-medium text-charcoal-muted uppercase tracking-wider">Held</div>
-          <div className="text-lg font-semibold text-charcoal mt-0.5">{summary.totalClassesHeld}</div>
+          <div className="text-lg font-semibold text-charcoal mt-0.5 tabular-nums">{summary.totalClassesHeld}</div>
           <div className="text-[10px] text-charcoal-muted mt-0.5">classes scheduled</div>
         </div>
 
-        <div className="bg-background border border-border rounded p-3 text-center">
+        <div className="tactile-card p-3.5 text-center">
           <div className="text-[11px] font-medium text-charcoal-muted uppercase tracking-wider">Attended</div>
-          <div className="text-lg font-semibold text-forest mt-0.5">{summary.totalClassesAttended}</div>
+          <div className="text-lg font-semibold text-accent mt-0.5 tabular-nums">{summary.totalClassesAttended}</div>
           <div className="text-[10px] text-charcoal-muted mt-0.5">classes present</div>
         </div>
 
-        <div className="bg-background border border-border rounded p-3 text-center">
+        <div className="tactile-card p-3.5 text-center">
           <div className="text-[11px] font-medium text-charcoal-muted uppercase tracking-wider">Missed</div>
           <div
-            className={`text-lg font-semibold mt-0.5 ${
+            className={`text-lg font-semibold mt-0.5 tabular-nums ${
               summary.totalClassesMissed > 0 ? 'text-amber-800' : 'text-charcoal-muted'
             }`}
           >
@@ -260,30 +260,30 @@ export const AttendanceHeatmap: React.FC<AttendanceHeatmapProps> = ({
           <div className="text-[10px] text-charcoal-muted mt-0.5">absences</div>
         </div>
 
-        <div className="bg-background border border-border rounded p-3 text-center">
+        <div className="tactile-card p-3.5 text-center">
           <div className="text-[11px] font-medium text-charcoal-muted uppercase tracking-wider">Annual Rate</div>
-          <div className="text-lg font-semibold text-charcoal mt-0.5">
+          <div className="text-lg font-semibold text-charcoal mt-0.5 tabular-nums">
             {summary.overallPercentage !== null
-              ? `${formatAttendancePercentage(summary.overallPercentage)}%`
+              ? formatAttendancePercentage(summary.overallPercentage)
               : '—'}
           </div>
           <div className="text-[10px] text-charcoal-muted mt-0.5">overall consistency</div>
         </div>
 
-        <div className="bg-background border border-border rounded p-3 text-center">
+        <div className="tactile-card p-3.5 text-center">
           <div className="text-[11px] font-medium text-charcoal-muted uppercase tracking-wider flex items-center justify-center gap-1">
             <span>Active Days</span>
           </div>
-          <div className="text-lg font-semibold text-charcoal mt-0.5">{summary.activeDaysCount}</div>
+          <div className="text-lg font-semibold text-charcoal mt-0.5 tabular-nums">{summary.activeDaysCount}</div>
           <div className="text-[10px] text-charcoal-muted mt-0.5">days attended</div>
         </div>
 
-        <div className="bg-background border border-border rounded p-3 text-center">
+        <div className="tactile-card p-3.5 text-center">
           <div className="text-[11px] font-medium text-charcoal-muted uppercase tracking-wider flex items-center justify-center gap-1">
             <Flame className="w-3 h-3 text-amber-700" />
             <span>Streak</span>
           </div>
-          <div className="text-lg font-semibold text-charcoal mt-0.5">
+          <div className="text-lg font-semibold text-charcoal mt-0.5 tabular-nums">
             {summary.longestStreak} <span className="text-xs font-normal text-charcoal-muted">days</span>
           </div>
           <div className="text-[10px] text-charcoal-muted mt-0.5">
@@ -293,7 +293,7 @@ export const AttendanceHeatmap: React.FC<AttendanceHeatmapProps> = ({
       </div>
 
       {/* GitHub-Style Contribution Heatmap Card */}
-      <div className="p-5 rounded bg-background border border-border shadow-2xs relative">
+      <div className="tactile-card p-5 sm:p-6 relative">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
           <div>
             <h2 className="text-sm font-semibold text-charcoal">
@@ -361,11 +361,11 @@ export const AttendanceHeatmap: React.FC<AttendanceHeatmapProps> = ({
                           onMouseLeave={handleCellLeave}
                           onFocus={(e) => handleCellHover(e, day)}
                           onBlur={handleCellLeave}
-                          className={`w-3 h-3 rounded-xs outline-none transition-transform duration-100 ${
-                            isClickable ? 'cursor-pointer hover:scale-125 hover:z-10' : ''
+                          className={`w-3 h-3 rounded-xs outline-none transition-all duration-150 ease-organimo ${
+                            isClickable ? 'cursor-pointer hover:scale-125 hover:z-10 shadow-2xs' : ''
                           } ${day.isToday ? 'ring-1.5 ring-charcoal/80 ring-offset-1 z-5' : ''} ${
                             getCellColorClass(day)
-                          } focus-visible:ring-2 focus-visible:ring-forest focus-visible:z-20`}
+                          } focus-visible:ring-2 focus-visible:ring-accent focus-visible:z-20`}
                         />
                       );
                     })}
