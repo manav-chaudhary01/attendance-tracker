@@ -32,6 +32,7 @@ export interface IStorage {
   deleteSubject(id: string): Promise<void>;
 
   // Attendance record operations
+  getAttendanceRecord(id: string): Promise<DailyAttendanceRecord | undefined>;
   getAttendanceRecords(subjectId?: string): Promise<DailyAttendanceRecord[]>;
   getAttendanceRecordsByDate(date: string): Promise<DailyAttendanceRecord[]>;
   getAttendanceRecordBySubjectAndDate(subjectId: string, date: string): Promise<DailyAttendanceRecord | undefined>;

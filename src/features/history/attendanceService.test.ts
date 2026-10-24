@@ -4,6 +4,9 @@ import {
   saveDailyAttendanceSession,
   getDailyAttendanceForDate,
   syncSubjectTotals,
+  deleteAttendanceRecordAndSync,
+  updateAttendanceRecordAndSync,
+  getAttendanceHistory,
   DailyAttendanceEntry,
 } from './attendanceService';
 import { getTodayLocalDateString, addDays } from '../../utils/dates';
@@ -335,6 +338,229 @@ describe('Daily Attendance Service', () => {
       const synced = await syncSubjectTotals('sub-math', storage);
       expect(synced.totalClassesHeld).toBe(3);
       expect(synced.totalClassesAttended).toBe(2);
+    });
+  });
+
+  describe('deleteAttendanceRecordAndSync', () => {
+    it('deletes an attendance record and atomically decreases subject totals', async () => {
+      // Create record
+      await storage.saveAttendanceRecord({
+        id: 'rec-1',
+        subjectId: 'sub-math',
+        date: yesterday,
+        classesHeld: 3,
+        classesAttended: 2,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
+      // Set subject totals
+      const mathSub = await storage.getSubject('sub-math');
+      await storage.saveSubject({
+        ...mathSub!,
+        totalClassesHeld: 3,
+        totalClassesAttended: 2,
+      });
+
+      const res = await deleteAttendanceRecordAndSync('rec-1', storage);
+      expect(res.updatedHeld).toBe(0);
+      expect(res.updatedAttended).toBe(0);
+
+      // Verify record is gone
+      const record = await storage.getAttendanceRecord('rec-1');
+      expect(record).toBeUndefined();
+
+      // Verify subject total is 0
+      const updatedSub = await storage.getSubject('sub-math');
+      expect(updatedSub?.totalClassesHeld).toBe(0);
+      expect(updatedSub?.totalClassesAttended).toBe(0);
+    });
+
+    it('preserves initial baseline classes when deleting a record', async () => {
+      const mathSub = await storage.getSubject('sub-math');
+      await storage.saveSubject({
+        ...mathSub!,
+        initialClassesHeld: 5,
+        initialClassesAttended: 4,
+        totalClassesHeld: 7,
+        totalClassesAttended: 6,
+      });
+
+      await storage.saveAttendanceRecord({
+        id: 'rec-2',
+        subjectId: 'sub-math',
+        date: yesterday,
+        classesHeld: 2,
+        classesAttended: 2,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
+
+      const res = await deleteAttendanceRecordAndSync('rec-2', storage);
+      expect(res.updatedHeld).toBe(5);
+      expect(res.updatedAttended).toBe(4);
+
+      const updatedSub = await storage.getSubject('sub-math');
+      expect(updatedSub?.totalClassesHeld).toBe(5);
+      expect(updatedSub?.totalClassesAttended).toBe(4);
+    });
+
+    it('throws error when record ID does not exist', async () => {
+      await expect(deleteAttendanceRecordAndSync('non-existent', storage)).rejects.toThrow(
+        'was not found'
+      );
+    });
+  });
+
+  describe('updateAttendanceRecordAndSync', () => {
+    it('updates record counts and recomputes subject totals', async () => {
+      await storage.saveAttendanceRecord({
+        id: 'rec-3',
+        subjectId: 'sub-math',
+        date: yesterday,
+        classesHeld: 1,
+        classesAttended: 1,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
+      const mathSub = await storage.getSubject('sub-math');
+      await storage.saveSubject({
+        ...mathSub!,
+        totalClassesHeld: 1,
+        totalClassesAttended: 1,
+      });
+
+      const updatedRec = await updateAttendanceRecordAndSync(
+        'rec-3',
+        { classesHeld: 2, classesAttended: 1, notes: 'Double session' },
+        storage
+      );
+
+      expect(updatedRec).toBeDefined();
+      expect(updatedRec?.classesHeld).toBe(2);
+      expect(updatedRec?.classesAttended).toBe(1);
+      expect(updatedRec?.notes).toBe('Double session');
+
+      const updatedSub = await storage.getSubject('sub-math');
+      expect(updatedSub?.totalClassesHeld).toBe(2);
+      expect(updatedSub?.totalClassesAttended).toBe(1);
+    });
+
+    it('deletes record when updated classesHeld is 0 (No Class)', async () => {
+      await storage.saveAttendanceRecord({
+        id: 'rec-4',
+        subjectId: 'sub-math',
+        date: yesterday,
+        classesHeld: 1,
+        classesAttended: 1,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
+
+      const res = await updateAttendanceRecordAndSync(
+        'rec-4',
+        { classesHeld: 0, classesAttended: 0 },
+        storage
+      );
+
+      expect(res).toBeNull();
+      const rec = await storage.getAttendanceRecord('rec-4');
+      expect(rec).toBeUndefined();
+    });
+
+    it('rejects invalid inputs when classesAttended exceeds classesHeld', async () => {
+      await storage.saveAttendanceRecord({
+        id: 'rec-5',
+        subjectId: 'sub-math',
+        date: yesterday,
+        classesHeld: 1,
+        classesAttended: 1,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
+
+      await expect(
+        updateAttendanceRecordAndSync('rec-5', { classesHeld: 1, classesAttended: 2 }, storage)
+      ).rejects.toThrow('Classes attended cannot exceed classes held');
+    });
+  });
+
+  describe('getAttendanceHistory', () => {
+    beforeEach(async () => {
+      // Add multiple records across dates
+      await storage.saveAttendanceRecord({
+        id: 'hist-1',
+        subjectId: 'sub-math',
+        date: '2026-10-20',
+        classesHeld: 2,
+        classesAttended: 2, // 100% full
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
+
+      await storage.saveAttendanceRecord({
+        id: 'hist-2',
+        subjectId: 'sub-math',
+        date: '2026-10-22',
+        classesHeld: 2,
+        classesAttended: 1, // 50% partial
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
+
+      await storage.saveAttendanceRecord({
+        id: 'hist-3',
+        subjectId: 'sub-cs',
+        date: '2026-10-22',
+        classesHeld: 1,
+        classesAttended: 0, // 0% zero
+        notes: 'Medical leave',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
+    });
+
+    it('retrieves all history records sorted by date descending', async () => {
+      const history = await getAttendanceHistory({ semesterId }, storage);
+      expect(history.length).toBe(3);
+      // Top record should be latest date (2026-10-22)
+      expect(history[0]!.date).toBe('2026-10-22');
+      expect(history[1]!.date).toBe('2026-10-22');
+      expect(history[2]!.date).toBe('2026-10-20');
+    });
+
+    it('correctly classifies status as full, partial, or zero', async () => {
+      const history = await getAttendanceHistory({ semesterId }, storage);
+      const mathOct20 = history.find((h) => h.id === 'hist-1');
+      expect(mathOct20?.status).toBe('full');
+      expect(mathOct20?.attendancePercentage).toBe(100);
+
+      const mathOct22 = history.find((h) => h.id === 'hist-2');
+      expect(mathOct22?.status).toBe('partial');
+      expect(mathOct22?.attendancePercentage).toBe(50);
+
+      const csOct22 = history.find((h) => h.id === 'hist-3');
+      expect(csOct22?.status).toBe('zero');
+      expect(csOct22?.attendancePercentage).toBe(0);
+      expect(csOct22?.notes).toBe('Medical leave');
+    });
+
+    it('filters records by subject ID', async () => {
+      const csOnly = await getAttendanceHistory({ subjectId: 'sub-cs' }, storage);
+      expect(csOnly.length).toBe(1);
+      expect(csOnly[0]!.subjectId).toBe('sub-cs');
+    });
+
+    it('filters records by date range', async () => {
+      const filtered = await getAttendanceHistory(
+        {
+          semesterId,
+          startDate: '2026-10-21',
+          endDate: '2026-10-23',
+        },
+        storage
+      );
+      expect(filtered.length).toBe(2);
+      expect(filtered.every((f) => f.date === '2026-10-22')).toBe(true);
     });
   });
 });
