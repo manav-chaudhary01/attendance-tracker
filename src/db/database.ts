@@ -159,6 +159,14 @@ export class IndexedDBStorage implements IStorage {
     return db.getAllFromIndex('attendance_records', 'by-date', date);
   }
 
+  async getAttendanceRecordBySubjectAndDate(
+    subjectId: string,
+    date: string
+  ): Promise<DailyAttendanceRecord | undefined> {
+    const db = await getDb();
+    return db.getFromIndex('attendance_records', 'by-subject-date', [subjectId, date]);
+  }
+
   async saveAttendanceRecord(record: DailyAttendanceRecord): Promise<void> {
     const db = await getDb();
     await db.put('attendance_records', record);
@@ -167,6 +175,31 @@ export class IndexedDBStorage implements IStorage {
   async deleteAttendanceRecord(id: string): Promise<void> {
     const db = await getDb();
     await db.delete('attendance_records', id);
+  }
+
+  async saveAttendanceBatch(
+    recordsToSave: DailyAttendanceRecord[],
+    recordIdsToDelete: string[],
+    updatedSubjects: Subject[]
+  ): Promise<void> {
+    const db = await getDb();
+    const tx = db.transaction(['subjects', 'attendance_records'], 'readwrite');
+    const recordStore = tx.objectStore('attendance_records');
+    const subjectStore = tx.objectStore('subjects');
+
+    for (const rec of recordsToSave) {
+      await recordStore.put(rec);
+    }
+
+    for (const recId of recordIdsToDelete) {
+      await recordStore.delete(recId);
+    }
+
+    for (const subj of updatedSubjects) {
+      await subjectStore.put(subj);
+    }
+
+    await tx.done;
   }
 
   async getSettings(): Promise<AppSettings> {

@@ -71,6 +71,13 @@ export class MockStorage implements IStorage {
     return this.records.filter((r) => r.date === date);
   }
 
+  async getAttendanceRecordBySubjectAndDate(
+    subjectId: string,
+    date: string
+  ): Promise<DailyAttendanceRecord | undefined> {
+    return this.records.find((r) => r.subjectId === subjectId && r.date === date);
+  }
+
   async saveAttendanceRecord(record: DailyAttendanceRecord): Promise<void> {
     const idx = this.records.findIndex((r) => r.id === record.id);
     if (idx >= 0) {
@@ -82,6 +89,36 @@ export class MockStorage implements IStorage {
 
   async deleteAttendanceRecord(id: string): Promise<void> {
     this.records = this.records.filter((r) => r.id !== id);
+  }
+
+  async saveAttendanceBatch(
+    recordsToSave: DailyAttendanceRecord[],
+    recordIdsToDelete: string[],
+    updatedSubjects: Subject[]
+  ): Promise<void> {
+    // Delete
+    const deleteSet = new Set(recordIdsToDelete);
+    this.records = this.records.filter((r) => !deleteSet.has(r.id));
+
+    // Upsert records
+    for (const rec of recordsToSave) {
+      const idx = this.records.findIndex((r) => r.id === rec.id);
+      if (idx >= 0) {
+        this.records[idx] = rec;
+      } else {
+        this.records.push(rec);
+      }
+    }
+
+    // Upsert subjects
+    for (const subj of updatedSubjects) {
+      const idx = this.subjects.findIndex((s) => s.id === subj.id);
+      if (idx >= 0) {
+        this.subjects[idx] = subj;
+      } else {
+        this.subjects.push(subj);
+      }
+    }
   }
 
   async getSettings(): Promise<AppSettings> {

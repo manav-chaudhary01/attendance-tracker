@@ -158,7 +158,15 @@ export const App: React.FC = () => {
           />
         );
       case 'history':
-        return <HistoryView />;
+        return (
+          <HistoryView
+            activeSemester={activeSemester}
+            subjects={subjects}
+            storage={storage}
+            onAttendanceSaved={refreshData}
+            onNavigate={navigate}
+          />
+        );
       case 'heatmap':
         return <HeatmapView />;
       case 'semesters':
