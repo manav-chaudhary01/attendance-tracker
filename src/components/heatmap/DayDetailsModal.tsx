@@ -78,14 +78,14 @@ export const DayDetailsModal: React.FC<DayDetailsModalProps> = ({
         e.preventDefault();
         onClose();
       }}
-      className="p-0 rounded border border-border bg-background shadow-lg max-w-lg w-full backdrop:bg-charcoal/40 text-charcoal outline-none m-auto"
+      className="p-0 rounded-lg border border-border bg-white shadow-xl max-w-lg w-full backdrop:bg-charcoal/40 backdrop:backdrop-blur-sm text-charcoal outline-none m-auto animate-scale-in"
       aria-labelledby="day-details-title"
     >
       <div className="p-5 space-y-5">
         {/* Modal Header */}
         <div className="flex items-start justify-between gap-3 pb-3 border-b border-border">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded bg-background-subtle border border-border text-forest">
+            <div className="p-2 rounded-md bg-accent-light text-accent">
               <Calendar className="w-4 h-4" aria-hidden="true" />
             </div>
             <div>
@@ -94,12 +94,12 @@ export const DayDetailsModal: React.FC<DayDetailsModalProps> = ({
                   {formattedDate}
                 </h2>
                 {relativeBadge && (
-                  <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-forest/10 text-forest border border-forest/20">
+                  <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-accent-light text-accent border border-accent-subtle">
                     {relativeBadge}
                   </span>
                 )}
                 {day.isToday && !relativeBadge && (
-                  <span className="text-[10px] font-medium px-1.5 py-0.5 rounded bg-forest/10 text-forest border border-forest/20">
+                  <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-accent-light text-accent border border-accent-subtle">
                     Today
                   </span>
                 )}
@@ -116,7 +116,7 @@ export const DayDetailsModal: React.FC<DayDetailsModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="text-charcoal-muted hover:text-charcoal p-1 rounded hover:bg-background-subtle focus-visible:ring-2 focus-visible:ring-forest outline-none transition-colors"
+            className="text-charcoal-muted hover:text-charcoal p-1.5 rounded-md hover:bg-background-subtle focus-visible:ring-2 focus-visible:ring-accent outline-none transition-colors"
             aria-label="Close details"
           >
             <X className="w-4 h-4" />
@@ -198,11 +198,11 @@ export const DayDetailsModal: React.FC<DayDetailsModalProps> = ({
                           </span>
                         )}
                       </div>
-                      <div className="text-xs font-semibold">
-                        <span className="text-forest">{r.classesAttended}</span>
+                      <div className="text-xs font-semibold tabular-nums">
+                        <span className="text-accent">{r.classesAttended}</span>
                         <span className="text-charcoal-muted"> / {r.classesHeld}</span>
                         <span className="text-[11px] text-charcoal-muted ml-1.5">
-                          ({formatAttendancePercentage(pct)}%)
+                          ({formatAttendancePercentage(pct)})
                         </span>
                       </div>
                     </div>
@@ -224,7 +224,7 @@ export const DayDetailsModal: React.FC<DayDetailsModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="px-3 py-1.5 text-xs text-charcoal-muted hover:text-charcoal border border-border rounded hover:bg-background-subtle focus-visible:ring-2 focus-visible:ring-forest outline-none transition-colors"
+            className="px-3.5 py-1.5 text-xs text-charcoal-muted hover:text-charcoal border border-border rounded-md hover:bg-background-subtle focus-visible:ring-2 focus-visible:ring-accent outline-none transition-all duration-150 tactile-button"
           >
             Close
           </button>
@@ -233,7 +233,7 @@ export const DayDetailsModal: React.FC<DayDetailsModalProps> = ({
             <button
               type="button"
               onClick={handleEditClick}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-forest text-white rounded hover:bg-forest/90 focus-visible:ring-2 focus-visible:ring-forest outline-none transition-colors shadow-xs"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium bg-accent text-white rounded-md hover:bg-accent-hover focus-visible:ring-2 focus-visible:ring-accent outline-none transition-all duration-150 shadow-2xs tactile-button"
             >
               <span>Edit in Daily Logger</span>
               <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />

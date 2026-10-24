@@ -85,7 +85,7 @@ export const AttendanceProgress: React.FC<AttendanceProgressProps> = ({
       >
         {/* Fill bar */}
         <div
-          className={`h-full ${fillColor} transition-all duration-300 ease-out`}
+          className={`h-full ${fillColor} transition-[width,background-color] duration-600 ease-[cubic-bezier(0.16,1,0.3,1)]`}
           style={{ width: `${fillWidthPercent}%` }}
         />
 

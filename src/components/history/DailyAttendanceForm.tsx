@@ -356,14 +356,14 @@ export const DailyAttendanceForm: React.FC<DailyAttendanceFormProps> = ({
   return (
     <div className="space-y-6">
       {/* Date Navigation Bar */}
-      <div className="p-4 bg-background border border-border rounded space-y-3">
+      <div className="tactile-card p-4 sm:p-5 space-y-3.5">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           {/* Left: Previous, Next, Quick Today */}
           <div className="flex items-center gap-1.5">
             <button
               type="button"
               onClick={handlePreviousDay}
-              className="p-1.5 text-charcoal-muted hover:text-charcoal hover:bg-background-subtle border border-border rounded transition-colors"
+              className="p-1.5 text-charcoal-muted hover:text-charcoal hover:bg-background-subtle border border-border rounded-md transition-all duration-150 tactile-button"
               title="Previous Day"
               aria-label="Previous Day"
             >
@@ -373,7 +373,7 @@ export const DailyAttendanceForm: React.FC<DailyAttendanceFormProps> = ({
             <button
               type="button"
               onClick={handleNextDay}
-              className="p-1.5 text-charcoal-muted hover:text-charcoal hover:bg-background-subtle border border-border rounded transition-colors"
+              className="p-1.5 text-charcoal-muted hover:text-charcoal hover:bg-background-subtle border border-border rounded-md transition-all duration-150 tactile-button"
               title="Next Day"
               aria-label="Next Day"
             >
@@ -384,7 +384,7 @@ export const DailyAttendanceForm: React.FC<DailyAttendanceFormProps> = ({
               <button
                 type="button"
                 onClick={handleJumpToToday}
-                className="px-2.5 py-1 text-xs font-medium text-accent bg-accent-light border border-accent-subtle rounded hover:bg-accent hover:text-white transition-colors"
+                className="px-2.5 py-1 text-xs font-medium text-accent bg-accent-light border border-accent-subtle rounded-md hover:bg-accent hover:text-white transition-all duration-150 tactile-button"
               >
                 Jump to Today
               </button>
@@ -398,7 +398,7 @@ export const DailyAttendanceForm: React.FC<DailyAttendanceFormProps> = ({
                 {formatDateForDisplay(selectedDate, { includeWeekday: true, includeYear: true })}
               </span>
               {relativeBadge && (
-                <span className="px-2 py-0.5 rounded text-[11px] font-medium bg-background-subtle text-charcoal-muted border border-border">
+                <span className="px-2 py-0.5 rounded-full text-[11px] font-medium bg-accent-light text-accent border border-accent-subtle">
                   {relativeBadge}
                 </span>
               )}
@@ -422,7 +422,7 @@ export const DailyAttendanceForm: React.FC<DailyAttendanceFormProps> = ({
               />
               <button
                 type="button"
-                className="p-1.5 rounded border border-border text-charcoal-muted hover:text-charcoal hover:bg-background-subtle pointer-events-none"
+                className="p-1.5 rounded-md border border-border text-charcoal-muted hover:text-charcoal hover:bg-background-subtle pointer-events-none transition-colors"
                 aria-hidden="true"
                 tabIndex={-1}
               >
@@ -436,7 +436,7 @@ export const DailyAttendanceForm: React.FC<DailyAttendanceFormProps> = ({
         {isFuture && (
           <div
             role="alert"
-            className="p-2.5 rounded bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-center gap-2"
+            className="p-2.5 rounded-md bg-amber-50 border border-amber-200 text-amber-800 text-xs flex items-center gap-2 animate-reveal-down"
           >
             <AlertCircle className="w-4 h-4 shrink-0" aria-hidden="true" />
             <span>
@@ -449,16 +449,16 @@ export const DailyAttendanceForm: React.FC<DailyAttendanceFormProps> = ({
         {saveSuccessMsg && (
           <div
             role="status"
-            className="p-2.5 rounded bg-status-eligibleBg border border-[#cbe0d3] text-status-eligible text-xs flex items-center justify-between"
+            className="p-2.5 rounded-md bg-status-eligibleBg border border-[#cbe0d3] text-status-eligible text-xs flex items-center justify-between animate-reveal-down"
           >
             <div className="flex items-center gap-2">
               <Check className="w-4 h-4" aria-hidden="true" />
-              <span>{saveSuccessMsg}</span>
+              <span className="font-medium">{saveSuccessMsg}</span>
             </div>
             <button
               type="button"
               onClick={() => setSaveSuccessMsg(null)}
-              className="text-status-eligible opacity-75 hover:opacity-100"
+              className="text-status-eligible opacity-75 hover:opacity-100 p-1"
             >
               <X className="w-3.5 h-3.5" aria-hidden="true" />
             </button>
@@ -469,7 +469,7 @@ export const DailyAttendanceForm: React.FC<DailyAttendanceFormProps> = ({
         {errorMessage && (
           <div
             role="alert"
-            className="p-2.5 rounded bg-status-ineligibleBg border border-[#feb2b2] text-status-ineligible text-xs flex items-center justify-between"
+            className="p-2.5 rounded-md bg-status-ineligibleBg border border-[#feb2b2] text-status-ineligible text-xs flex items-center justify-between animate-reveal-down"
           >
             <div className="flex items-center gap-2">
               <AlertCircle className="w-4 h-4" aria-hidden="true" />
@@ -478,7 +478,7 @@ export const DailyAttendanceForm: React.FC<DailyAttendanceFormProps> = ({
             <button
               type="button"
               onClick={() => setErrorMessage(null)}
-              className="text-status-ineligible opacity-75 hover:opacity-100"
+              className="text-status-ineligible opacity-75 hover:opacity-100 p-1"
             >
               <X className="w-3.5 h-3.5" aria-hidden="true" />
             </button>
@@ -527,7 +527,7 @@ export const DailyAttendanceForm: React.FC<DailyAttendanceFormProps> = ({
                 type="button"
                 onClick={handleSave}
                 disabled={isSaving || isFuture}
-                className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-medium bg-accent text-white rounded hover:bg-accent-hover transition-colors shadow-sm disabled:opacity-50"
+                className="flex items-center gap-1.5 px-4 py-2 text-xs font-medium bg-accent text-white rounded-md hover:bg-accent-hover transition-all duration-200 shadow-2xs disabled:opacity-50 tactile-button"
               >
                 <Save className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>{isSaving ? 'Saving...' : 'Save Attendance'}</span>
@@ -562,13 +562,13 @@ export const DailyAttendanceForm: React.FC<DailyAttendanceFormProps> = ({
               return (
                 <div
                   key={subject.id}
-                  className={`p-4 bg-background border rounded transition-colors ${
+                  className={`p-4 rounded-lg border transition-all duration-200 ${
                     isNoClass
-                      ? 'border-border bg-background'
+                      ? 'border-border bg-white hover:border-border-strong'
                       : isPresentSingle
-                      ? 'border-accent-subtle bg-accent-light/5'
+                      ? 'border-accent-subtle bg-accent-light/10 shadow-2xs'
                       : isAbsentSingle
-                      ? 'border-amber-200 bg-amber-50/20'
+                      ? 'border-amber-200 bg-amber-50/30 shadow-2xs'
                       : 'border-border-strong bg-background-subtle'
                   }`}
                 >
@@ -582,7 +582,7 @@ export const DailyAttendanceForm: React.FC<DailyAttendanceFormProps> = ({
                             {subject.subjectCode}
                           </span>
                         )}
-                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-background-subtle border border-border text-charcoal-light">
+                        <span className="text-[10px] px-1.5 py-0.5 rounded bg-background-subtle border border-border text-charcoal-light tabular-nums">
                           Target {subject.attendanceTarget}%
                         </span>
                       </div>
@@ -632,9 +632,9 @@ export const DailyAttendanceForm: React.FC<DailyAttendanceFormProps> = ({
                             disabled={isFuture}
                             onClick={() => handleMarkNoClass(subject.id)}
                             aria-pressed={isNoClass}
-                            className={`flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded transition-colors ${
+                            className={`flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-150 tactile-button ${
                               isNoClass
-                                ? 'bg-charcoal text-white font-semibold'
+                                ? 'bg-charcoal text-white font-semibold shadow-xs'
                                 : 'text-charcoal-muted hover:text-charcoal bg-background border border-border hover:bg-background-subtle'
                             } disabled:opacity-50`}
                           >
@@ -648,7 +648,7 @@ export const DailyAttendanceForm: React.FC<DailyAttendanceFormProps> = ({
                             disabled={isFuture}
                             onClick={() => handleMarkPresent(subject.id)}
                             aria-pressed={isPresentSingle}
-                            className={`flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded transition-colors ${
+                            className={`flex items-center gap-1 px-3.5 py-1.5 text-xs font-medium rounded-md transition-all duration-150 tactile-button ${
                               isPresentSingle
                                 ? 'bg-accent text-white font-semibold shadow-xs'
                                 : 'text-accent bg-accent-light border border-accent-subtle hover:bg-accent hover:text-white'
@@ -664,7 +664,7 @@ export const DailyAttendanceForm: React.FC<DailyAttendanceFormProps> = ({
                             disabled={isFuture}
                             onClick={() => handleMarkAbsent(subject.id)}
                             aria-pressed={isAbsentSingle}
-                            className={`flex items-center gap-1 px-3 py-1.5 text-xs font-medium rounded transition-colors ${
+                            className={`flex items-center gap-1 px-3.5 py-1.5 text-xs font-medium rounded-md transition-all duration-150 tactile-button ${
                               isAbsentSingle
                                 ? 'bg-status-ineligible text-white font-semibold shadow-xs'
                                 : 'text-[#a83232] bg-status-ineligibleBg border border-[#feb2b2] hover:bg-status-ineligible hover:text-white'
@@ -679,7 +679,7 @@ export const DailyAttendanceForm: React.FC<DailyAttendanceFormProps> = ({
                             type="button"
                             disabled={isFuture}
                             onClick={() => handleToggleCustom(subject.id)}
-                            className="text-[11px] text-charcoal-light hover:text-charcoal px-2 py-1 rounded border border-dashed border-border"
+                            className="text-[11px] text-charcoal-light hover:text-charcoal px-2.5 py-1 rounded-md border border-dashed border-border transition-colors hover:border-charcoal-muted"
                             title="Multiple classes on this date"
                           >
                             Multiple classes?

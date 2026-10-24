@@ -2,10 +2,18 @@
 
 A clean, practical attendance tracking web app designed for university students. The application runs entirely client-side with persistent local storage in IndexedDB, requiring no accounts, cloud databases, or external services.
 
-## Current Status (Stage 6 — Dashboard, Product Polish, and Final Verification)
+## Current Status: Motion-First UI Redesign (Inspired by Organimo)
 
-This repository contains the complete, production-ready personal attendance tracker web app:
+This repository contains the complete, production-ready personal attendance tracker web app, featuring a refined, tactile motion design inspired by Organimo:
 
+- **Organimo-Inspired Motion & Tactile System**:
+  - Silky cubic-bezier easing (`cubic-bezier(0.16, 1, 0.3, 1)`) matching organic, tactile motion pacing.
+  - Page entry transitions with subtle translations and opacity cross-fades that prevent flicker and layout shifts.
+  - Custom scroll reveal system (`useScrollReveal`, `MotionReveal`) with one-time viewport observation and progressive enhancement.
+  - Tactile card micro-interactions (`.tactile-card`, `.interactive-card`) providing subtle lift (`translateY(-1.5px)`), border glow, and shadow elevation on hover.
+  - Tactile button feedback (`.tactile-button`) with subtle scale down (`scale-[0.98]`) on active clicks.
+  - Smooth progress bar transitions (`duration-600`) visualizing attendance progress changes organically.
+  - Global `prefers-reduced-motion` compliance: CSS and React hooks collapse motion to instant display while maintaining full visual state clarity.
 - **Enhanced Student Dashboard**:
   - Active semester banner with academic year, term dates, and direct "Log Today's Attendance" CTA shortcut.
   - Mathematically sound weighted overall attendance percentage ($\frac{\sum A}{\sum H}$) across active semester subjects, avoiding unweighted averaging distortion.
@@ -23,8 +31,6 @@ This repository contains the complete, production-ready personal attendance trac
   - Atomic IndexedDB restoration (`storage.importData`) ensuring consistent all-or-nothing rollback on failure.
   - Safe database reset with modal confirmation dialog to reset local state.
   - Configurable application preferences: default attendance target (0–100%) and heatmap week start day (Monday vs Sunday).
-- **Yearly Attendance Heatmap**:
-
 - **Yearly Attendance Heatmap**:
   - Signature GitHub-contribution-style calendar grid tracking attendance consistency throughout the entire year (53 weeks × 7 days).
   - Forest-green intensity palette with 4 proportional levels based on classes attended.

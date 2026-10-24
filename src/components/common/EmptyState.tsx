@@ -26,24 +26,24 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 }) => {
   return (
     <div
-      className={`bg-background-subtle border border-border rounded p-6 sm:p-8 text-center max-w-lg mx-auto ${className}`}
+      className={`tactile-card p-6 sm:p-8 text-center max-w-lg mx-auto ${className}`}
     >
       {Icon && (
-        <div className="inline-flex items-center justify-center w-10 h-10 rounded bg-accent-light text-accent mb-3">
+        <div className="inline-flex items-center justify-center w-11 h-11 rounded-lg bg-accent-light text-accent mb-3.5 shadow-2xs">
           <Icon className="w-5 h-5" aria-hidden="true" />
         </div>
       )}
       <h3 className="text-sm font-semibold text-charcoal mb-1.5">{title}</h3>
-      <p className="text-xs text-charcoal-muted leading-relaxed mb-4 max-w-md mx-auto">
+      <p className="text-xs text-charcoal-muted leading-relaxed mb-5 max-w-md mx-auto">
         {description}
       </p>
       {(action || secondaryAction) && (
-        <div className="flex flex-wrap items-center justify-center gap-2">
+        <div className="flex flex-wrap items-center justify-center gap-2.5">
           {action && (
             <button
               type="button"
               onClick={action.onClick}
-              className="px-3.5 py-1.5 text-xs font-medium bg-accent text-white rounded hover:bg-accent-hover transition-colors"
+              className="px-4 py-2 text-xs font-medium bg-accent text-white rounded-md hover:bg-accent-hover transition-all duration-200 tactile-button shadow-2xs"
             >
               {action.label}
             </button>
@@ -52,7 +52,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
             <button
               type="button"
               onClick={secondaryAction.onClick}
-              className="px-3.5 py-1.5 text-xs font-medium bg-background border border-border text-charcoal-muted hover:text-charcoal rounded hover:bg-background-subtle transition-colors"
+              className="px-4 py-2 text-xs font-medium bg-background border border-border text-charcoal-muted hover:text-charcoal rounded-md hover:bg-background-subtle transition-all duration-200 tactile-button"
             >
               {secondaryAction.label}
             </button>

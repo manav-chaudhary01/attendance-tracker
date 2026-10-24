@@ -46,6 +46,47 @@ export default {
         DEFAULT: '4px',
         md: '6px',
         lg: '8px',
+        xl: '12px',
+      },
+      transitionTimingFunction: {
+        'organimo': 'cubic-bezier(0.16, 1, 0.3, 1)',
+        'smooth-out': 'cubic-bezier(0.16, 1, 0.3, 1)',
+        'smooth-in-out': 'cubic-bezier(0.65, 0, 0.35, 1)',
+      },
+      transitionDuration: {
+        '250': '250ms',
+        '350': '350ms',
+        '400': '400ms',
+        '600': '600ms',
+      },
+      keyframes: {
+        'reveal-up': {
+          '0%': { opacity: '0', transform: 'translateY(12px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'reveal-down': {
+          '0%': { opacity: '0', transform: 'translateY(-8px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        'scale-in': {
+          '0%': { opacity: '0', transform: 'scale(0.97)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        'fade-in': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        'subtle-pulse': {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.6' },
+        },
+      },
+      animation: {
+        'reveal-up': 'reveal-up 380ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        'reveal-down': 'reveal-down 280ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        'scale-in': 'scale-in 240ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        'fade-in': 'fade-in 260ms cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        'subtle-pulse': 'subtle-pulse 2s ease-in-out infinite',
       },
     },
   },
