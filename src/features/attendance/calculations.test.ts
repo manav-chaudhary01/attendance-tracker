@@ -8,6 +8,10 @@ import {
   calculateSemesterOverall,
   validateCounts,
   validateTarget,
+  parseCountInput,
+  parseTargetInput,
+  formatAttendancePercentage,
+  calculateNextClassImpact,
 } from './calculations';
 
 describe('Attendance Calculations Module', () => {
@@ -32,6 +36,64 @@ describe('Attendance Calculations Module', () => {
       expect(() => validateTarget(75)).not.toThrow();
       expect(() => validateTarget(0)).not.toThrow();
       expect(() => validateTarget(100)).not.toThrow();
+      expect(() => validateTarget(75.5)).not.toThrow();
+    });
+  });
+
+  describe('Form input parsing helpers', () => {
+    it('parses valid count inputs', () => {
+      expect(parseCountInput('20')).toEqual({ value: 20 });
+      expect(parseCountInput(' 0 ')).toEqual({ value: 0 });
+    });
+
+    it('returns meaningful error on invalid count inputs', () => {
+      expect(parseCountInput('', 'Classes held').error).toBe('Classes held is required.');
+      expect(parseCountInput('-5', 'Classes held').error).toBe('Classes held cannot be negative.');
+      expect(parseCountInput('3.5', 'Classes held').error).toBe('Classes held must be a whole number.');
+      expect(parseCountInput('abc', 'Classes held').error).toBe('Classes held must be a whole number.');
+    });
+
+    it('parses valid target percentage inputs', () => {
+      expect(parseTargetInput('75')).toEqual({ value: 75 });
+      expect(parseTargetInput('75.5')).toEqual({ value: 75.5 });
+      expect(parseTargetInput('0')).toEqual({ value: 0 });
+      expect(parseTargetInput('100')).toEqual({ value: 100 });
+    });
+
+    it('returns meaningful error on invalid target percentage inputs', () => {
+      expect(parseTargetInput('', 'Target').error).toBe('Target is required.');
+      expect(parseTargetInput('-1', 'Target').error).toBe('Target must be between 0% and 100%.');
+      expect(parseTargetInput('105', 'Target').error).toBe('Target must be between 0% and 100%.');
+      expect(parseTargetInput('invalid', 'Target').error).toBe('Target must be a valid number.');
+    });
+  });
+
+  describe('Attendance percentage formatting & guard against misleading rounding', () => {
+    it('returns dash for null percentage', () => {
+      expect(formatAttendancePercentage(null)).toBe('—');
+    });
+
+    it('formats standard percentages to 1 decimal place', () => {
+      expect(formatAttendancePercentage(80)).toBe('80.0%');
+      expect(formatAttendancePercentage(75.25)).toBe('75.3%');
+    });
+
+    it('prevents rounding up to target when student is actually below target', () => {
+      // 74.96% with target 75%: standard toFixed(1) would round to 75.0%, misleading student!
+      const formatted = formatAttendancePercentage(74.96, { precision: 1, target: 75 });
+      expect(formatted).toBe('74.9%');
+      expect(parseFloat(formatted)).toBeLessThan(75);
+    });
+  });
+
+  describe('Next class impact projection', () => {
+    it('calculates the impact of attending vs missing the next class', () => {
+      // Held 4, Attended 3 (75%)
+      // If attended: 4/5 = 80%
+      // If missed: 3/5 = 60%
+      const impact = calculateNextClassImpact(4, 3);
+      expect(impact.ifAttendedPercentage).toBe(80);
+      expect(impact.ifMissedPercentage).toBe(60);
     });
   });
 
@@ -59,41 +121,19 @@ describe('Attendance Calculations Module', () => {
     });
 
     it('returns 0 when already meeting the target', () => {
-      // 3/4 = 75%, target 75% -> 0 classes needed
       expect(calculateClassesToRecover(4, 3, 75)).toBe(0);
-      // 8/10 = 80%, target 75% -> 0 classes needed
       expect(calculateClassesToRecover(10, 8, 75)).toBe(0);
     });
 
     it('calculates recovery classes when below target', () => {
-      // 2/4 = 50%, target 75%
-      // (2 + x) / (4 + x) >= 0.75 => 2 + x >= 3 + 0.75x => 0.25x >= 1 => x >= 4
-      // Verification: (2+4)/(4+4) = 6/8 = 75%
       expect(calculateClassesToRecover(4, 2, 75)).toBe(4);
-
-      // 6/10 = 60%, target 75%
-      // (6 + x) / (10 + x) >= 0.75 => 6 + x >= 7.5 + 0.75x => 0.25x >= 1.5 => x >= 6
-      // Verification: (6+6)/(10+6) = 12/16 = 75%
       expect(calculateClassesToRecover(10, 6, 75)).toBe(6);
-
-      // 7/10 = 70%, target 75%
-      // (7 + x) / (10 + x) >= 0.75 => 7 + x >= 7.5 + 0.75x => 0.25x >= 0.5 => x >= 2
-      // Verification: (7+2)/(10+2) = 9/12 = 75%
       expect(calculateClassesToRecover(10, 7, 75)).toBe(2);
-
-      // 1/2 = 50%, target 80%
-      // (1 + x) / (2 + x) >= 0.8 => 1 + x >= 1.6 + 0.8x => 0.2x >= 0.6 => x >= 3
-      // Verification: (1+3)/(2+3) = 4/5 = 80%
       expect(calculateClassesToRecover(2, 1, 80)).toBe(3);
     });
 
     it('handles floating point precision boundary cases', () => {
-      // 14/20 = 70%, target 75% -> x = (0.75*20 - 14)/(0.25) = (15 - 14)/0.25 = 4
-      // (14+4)/(20+4) = 18/24 = 0.75
       expect(calculateClassesToRecover(20, 14, 75)).toBe(4);
-
-      // 74 out of 100, target 75% -> x = (75 - 74)/0.25 = 4
-      // (74+4)/(100+4) = 78/104 = 0.75
       expect(calculateClassesToRecover(100, 74, 75)).toBe(4);
     });
 
@@ -103,11 +143,7 @@ describe('Attendance Calculations Module', () => {
     });
 
     it('handles target of 100%', () => {
-      // If 10/10 attended, target 100% -> 0 needed
       expect(calculateClassesToRecover(10, 10, 100)).toBe(0);
-
-      // If even 1 class missed (e.g. 9/10), 100% is impossible for any finite x
-      // (9+x)/(10+x) < 1 always
       expect(calculateClassesToRecover(10, 9, 100)).toBeNull();
       expect(calculateClassesToRecover(1, 0, 100)).toBeNull();
     });
@@ -119,34 +155,18 @@ describe('Attendance Calculations Module', () => {
     });
 
     it('returns 0 when already below target', () => {
-      // 6/10 = 60% < 75%
       expect(calculateSafeBunks(10, 6, 75)).toBe(0);
-      // 0/1 = 0% < 75%
       expect(calculateSafeBunks(1, 0, 75)).toBe(0);
     });
 
     it('returns 0 when exactly at target and 1 bunk drops it below', () => {
-      // 3/4 = 75%. Bunking 1 gives 3/5 = 60% < 75%
       expect(calculateSafeBunks(4, 3, 75)).toBe(0);
-
-      // 15/20 = 75%. Bunking 1 gives 15/21 = 71.4% < 75%
       expect(calculateSafeBunks(20, 15, 75)).toBe(0);
     });
 
     it('calculates safe bunks accurately when above target', () => {
-      // 8/8 = 100%, target 75%
-      // 8 / (8 + b) >= 0.75 => 8 >= 6 + 0.75b => 2 >= 0.75b => b <= 2.666 => b = 2
-      // Check: b=2 => 8/10 = 80% (>= 75%). b=3 => 8/11 = 72.7% (< 75%)
       expect(calculateSafeBunks(8, 8, 75)).toBe(2);
-
-      // 16/16 = 100%, target 75%
-      // 16 / (16 + b) >= 0.75 => 16 >= 12 + 0.75b => 4 >= 0.75b => b <= 5.333 => b = 5
-      // Check: b=5 => 16/21 = 76.19% (>=75%). b=6 => 16/22 = 72.7% (< 75%)
       expect(calculateSafeBunks(16, 16, 75)).toBe(5);
-
-      // 18/20 = 90%, target 75%
-      // 18 / (20 + b) >= 0.75 => 18 >= 15 + 0.75b => 3 >= 0.75b => b <= 4
-      // Check: b=4 => 18/24 = 75% (>= 75%). b=5 => 18/25 = 72% (< 75%)
       expect(calculateSafeBunks(20, 18, 75)).toBe(4);
     });
 
@@ -156,7 +176,6 @@ describe('Attendance Calculations Module', () => {
     });
 
     it('handles 100% target correctly', () => {
-      // At 100%, missing even 1 class drops attendance below 100%
       expect(calculateSafeBunks(10, 10, 100)).toBe(0);
       expect(calculateSafeBunks(10, 9, 100)).toBe(0);
     });
@@ -164,21 +183,15 @@ describe('Attendance Calculations Module', () => {
 
   describe('Remaining classes feasibility (calculateRemainingClassesFeasibility)', () => {
     it('correctly assesses feasibility when target can still be met', () => {
-      // Held 20, Attended 12 (60%), target 75%, Remaining 20 classes
-      // Total classes will be 40. Target 75% of 40 = 30.
-      // Current attended = 12. Must attend 30 - 12 = 18 classes out of 20.
-      // Safe bunks out of 20 = 20 - 18 = 2 bunks.
       const res = calculateRemainingClassesFeasibility(20, 12, 75, 20);
       expect(res.isAchievable).toBe(true);
       expect(res.totalClassesWillBeHeld).toBe(40);
-      expect(res.maxAchievableAttendance).toBe(80); // (12+20)/40 = 32/40 = 80%
+      expect(res.maxAchievableAttendance).toBe(80);
       expect(res.minClassesMustAttend).toBe(18);
       expect(res.maxSafeBunksBeforeExam).toBe(2);
     });
 
     it('correctly assesses ineligibility when target cannot be met even attending all remaining', () => {
-      // Held 20, Attended 10 (50%), target 75%, Remaining 5 classes
-      // Total classes will be 25. Attending all 5 gives 15/25 = 60% < 75%.
       const res = calculateRemainingClassesFeasibility(20, 10, 75, 5);
       expect(res.isAchievable).toBe(false);
       expect(res.totalClassesWillBeHeld).toBe(25);
@@ -187,8 +200,6 @@ describe('Attendance Calculations Module', () => {
     });
 
     it('handles case where student must attend all remaining classes exactly', () => {
-      // Held 20, Attended 10 (50%), target 75%, Remaining 20 classes
-      // Total classes will be 40. 75% of 40 = 30. Attending all 20 gives 30/40 = 75%.
       const res = calculateRemainingClassesFeasibility(20, 10, 75, 20);
       expect(res.isAchievable).toBe(true);
       expect(res.minClassesMustAttend).toBe(20);
@@ -196,13 +207,11 @@ describe('Attendance Calculations Module', () => {
     });
 
     it('handles zero remaining classes', () => {
-      // Held 20, Attended 15 (75%), target 75%, Remaining 0
       const res = calculateRemainingClassesFeasibility(20, 15, 75, 0);
       expect(res.isAchievable).toBe(true);
       expect(res.minClassesMustAttend).toBe(0);
       expect(res.maxSafeBunksBeforeExam).toBe(0);
 
-      // Held 20, Attended 14 (70%), target 75%, Remaining 0
       const resFail = calculateRemainingClassesFeasibility(20, 14, 75, 0);
       expect(resFail.isAchievable).toBe(false);
     });
@@ -245,10 +254,6 @@ describe('Attendance Calculations Module', () => {
 
   describe('Semester Overall calculation (weighted sum)', () => {
     it('calculates weighted attendance across subjects correctly', () => {
-      // Subject A: 4 held, 4 attended (100%)
-      // Subject B: 100 held, 50 attended (50%)
-      // Unweighted average would be (100 + 50)/2 = 75%
-      // Weighted sum: 54 / 104 = 51.92%
       const subjects = [
         { totalClassesHeld: 4, totalClassesAttended: 4 },
         { totalClassesHeld: 100, totalClassesAttended: 50 },

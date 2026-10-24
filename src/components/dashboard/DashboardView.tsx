@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AppRoute } from '../../app/router';
+import { AttendanceCalculator } from '../attendance/AttendanceCalculator';
+import { SafeBunkCalculator } from '../attendance/SafeBunkCalculator';
+import { Calculator, ShieldCheck } from 'lucide-react';
 
 interface DashboardViewProps {
   onNavigate: (route: AppRoute) => void;
@@ -10,57 +13,80 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onNavigate,
   activeSemesterName,
 }) => {
+  const [calculatorTab, setCalculatorTab] = useState<'recovery' | 'safebunk'>('recovery');
+
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-4 border-b border-border">
         <div>
-          <h1 className="text-xl font-semibold text-charcoal">Dashboard</h1>
+          <h1 className="text-xl font-semibold text-charcoal">Attendance Engine</h1>
           <p className="text-xs text-charcoal-muted mt-0.5">
-            Active semester attendance overview and quick action center.
+            Interactive recovery modeling, safe-bunk analysis, and target eligibility calculator.
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={() => onNavigate('semesters')}
-            className="px-3 py-1.5 text-xs font-medium text-accent border border-accent rounded hover:bg-accent-light transition-colors"
-          >
-            Manage Semesters
-          </button>
+          {activeSemesterName ? (
+            <span className="text-xs text-charcoal-muted">
+              Active semester: <strong className="text-charcoal font-medium">{activeSemesterName}</strong>
+            </span>
+          ) : (
+            <button
+              type="button"
+              onClick={() => onNavigate('semesters')}
+              className="px-3 py-1.5 text-xs font-medium text-accent border border-accent rounded hover:bg-accent-light transition-colors"
+            >
+              Configure Semesters
+            </button>
+          )}
         </div>
       </div>
 
-      {/* Foundation State / Empty State */}
-      <div className="bg-background-subtle border border-border rounded p-6 text-center max-w-xl mx-auto my-8">
-        <div className="inline-flex items-center justify-center w-10 h-10 rounded bg-accent-light text-accent mb-3">
-          <span className="font-semibold text-sm">AT</span>
-        </div>
-        <h2 className="text-base font-medium text-charcoal mb-1">
-          {activeSemesterName ? `Active: ${activeSemesterName}` : 'Welcome to Personal Attendance Tracker'}
-        </h2>
-        <p className="text-xs text-charcoal-muted mb-5 leading-relaxed">
-          Stage 1 Foundation is initialized with verified core calculation modules and IndexedDB persistence.
-          {activeSemesterName
-            ? ' Add your subjects to start tracking classes and safe bunks.'
-            : ' Start by configuring your first academic semester.'}
-        </p>
-        <div className="flex flex-wrap justify-center gap-2">
-          <button
-            type="button"
-            onClick={() => onNavigate('semesters')}
-            className="px-3 py-1.5 text-xs font-medium bg-accent text-white rounded hover:bg-accent-hover transition-colors"
-          >
-            Go to Semesters
-          </button>
-          <button
-            type="button"
-            onClick={() => onNavigate('subjects')}
-            className="px-3 py-1.5 text-xs font-medium bg-background border border-border text-charcoal rounded hover:bg-background-subtle transition-colors"
-          >
-            View Subjects
-          </button>
-        </div>
+      {/* Tool Selector Tabs */}
+      <div className="flex items-center gap-2 border-b border-border pb-2">
+        <button
+          type="button"
+          onClick={() => setCalculatorTab('recovery')}
+          aria-pressed={calculatorTab === 'recovery'}
+          className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded transition-colors ${
+            calculatorTab === 'recovery'
+              ? 'bg-accent text-white font-semibold'
+              : 'text-charcoal-muted hover:text-charcoal hover:bg-background-subtle border border-border'
+          }`}
+        >
+          <Calculator className="w-3.5 h-3.5" aria-hidden="true" />
+          <span>Recovery &amp; Target Calculator</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setCalculatorTab('safebunk')}
+          aria-pressed={calculatorTab === 'safebunk'}
+          className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded transition-colors ${
+            calculatorTab === 'safebunk'
+              ? 'bg-accent text-white font-semibold'
+              : 'text-charcoal-muted hover:text-charcoal hover:bg-background-subtle border border-border'
+          }`}
+        >
+          <ShieldCheck className="w-3.5 h-3.5" aria-hidden="true" />
+          <span>Safe Bunk Analyzer</span>
+        </button>
       </div>
+
+      {/* Active Calculator Component */}
+      {calculatorTab === 'recovery' ? (
+        <AttendanceCalculator
+          initialHeld={20}
+          initialAttended={14}
+          initialTarget={75}
+        />
+      ) : (
+        <SafeBunkCalculator
+          initialHeld={24}
+          initialAttended={21}
+          initialTarget={75}
+        />
+      )}
     </div>
   );
 };

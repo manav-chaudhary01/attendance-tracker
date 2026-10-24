@@ -2,17 +2,23 @@
 
 A clean, practical attendance tracking web app designed for university students. The application runs entirely client-side with persistent local storage in IndexedDB, requiring no accounts, cloud databases, or external services.
 
-## Current Status (Stage 1 — Foundation)
+## Current Status (Stage 2 — Attendance Engine)
 
-This repository contains the foundation architecture and verified core calculations:
+This repository contains the foundation architecture and verified attendance calculation engine:
 
 - **Core Calculation Engine**:
   - Current attendance percentage calculation (distinguishes unstarted courses from 0% attendance).
   - Target recovery calculation: determines the minimum consecutive classes a student must attend to reach or exceed their attendance target ($x = \lceil (pH - A)/(1 - p) \rceil$) with numerical precision verification.
   - Safe-bunk calculator: calculates the maximum consecutive future classes that can be missed while remaining at or above the target ($b = \lfloor A/p - H \rfloor$).
   - Remaining-classes feasibility: evaluates exam eligibility when given the number of remaining classes, calculating minimum required attendance and safe exam bunks.
+  - Anti-misleading rounding guard: prevents rounding up to target when a student is strictly below target.
   - Weighted semester overall: sums total classes held and attended across subjects rather than unweighted percentage averaging.
   - Handled edge cases: 0 classes held, exact targets, 0% target, 100% target with absences, and boundary floating-point values.
+- **Attendance UI Components**:
+  - `AttendanceProgress`: Accessible progress bar with target threshold marker and status-aware color coding.
+  - `AttendanceStatus`: Restrained badges and callouts for `eligible`, `at_risk`, `ineligible`, and `not_started`.
+  - `AttendanceCalculator`: Interactive recovery modeling with quick presets (65%, 75%, 80%, 85%), remaining-classes feasibility, and next-class impact.
+  - `SafeBunkCalculator`: Safe-bunk tool with step-by-step miss impact projection table and assumption clarifications.
 - **Local Persistence Layer**:
   - IndexedDB database schema (`personal-attendance-tracker`, version 1) built on `idb`.
   - Object stores for `semesters`, `subjects`, `attendance_records`, and `settings` with compound indexes and cascade integrity.
